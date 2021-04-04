@@ -1,0 +1,21 @@
+.hotbar {
+    /*grid related display*/
+    display: grid;
+
+    /*positioning*/
+    bottom: 40px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.hotbar-item {
+    height: 132px;
+    width: 132px;
+
+    background-image: url("../Assets/hotbar/hotbar-item.png");
+    background-size:     cover;                 
+    background-repeat:   no-repeat;
+    background-position: center center;  
+}
+  

@@ -1,0 +1,17 @@
+.hotbar {
+    /*grid related display*/
+    grid-template-columns: repeat(10, 1fr);
+
+    /*sizing*/
+    width: 1328px;
+}
+
+#hotbar-item-1 {
+    background-image: url("../Assets/hotbar/hotbar-left-corner.png");
+    width: 136px;
+}
+
+#hotbar-item-10 {
+    background-image: url("../Assets/hotbar/hotbar-right-corner.png");
+    width: 136px;
+}
