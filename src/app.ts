@@ -1,3 +1,4 @@
+import { Carrot } from './model/carrot';
 import { ToastService } from './services/toast.service';
 
 class App {
@@ -13,11 +14,8 @@ class App {
     window.addEventListener('resize', (e: Event) => this.onResize()); //resizing event
 
     let addBtn = document.getElementById('addItemButton'); //adding event to button
-    addBtn.addEventListener('click', (e: Event) => this.toastService.addItem());
-
-    let rmvBtn = document.getElementById('removeItemButton'); //adding event to button
-    rmvBtn.addEventListener('click', (e: Event) =>
-      this.toastService.removeItem(),
+    addBtn.addEventListener('click', (e: Event) =>
+      this.toastService.addItem(new Carrot(1)),
     );
 
     this.onResize();

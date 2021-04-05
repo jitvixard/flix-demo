@@ -1,23 +1,46 @@
+import { AbstractItem as Item } from './../model/item';
+
 export class ToastService {
   toastContainer: HTMLElement;
-  toastList = new Array();
+  toastMap = new Map<string, number>();
 
-  toastRoutines = new Map();
+  toastRoutines = new Map<HTMLDivElement, number>();
 
   constructor() {
     this.toastContainer = document.getElementById('toast-container');
     console.log(this.toastContainer);
   }
 
-  addItem() {
+  addItem(item: Item) {
+    if (this.toastMap.has(item.id)) {
+      return;
+    }
+
+    //update amount
+    let amount = item.amount;
+
     //create toast element and set opacity
     let toast = document.createElement('div');
     toast.className = 'popup-toast';
     toast.style.opacity = (0).toString();
 
-    //setting content of toast element
-    let text = document.createTextNode(this.toastList.length.toString());
-    toast.appendChild(text);
+    //create content
+    let content = document.createElement('div');
+    content.classList.add('item', item.id);
+
+    //create image
+    let image = document.createElement('img');
+    image.setAttribute('src', item.getPath());
+
+    //set conent text
+    let text = document.createElement('p');
+    text.innerText = amount + ' x ' + item.displayName + ' Added';
+
+    content.appendChild(image);
+    content.appendChild(text);
+
+    //set content
+    toast.appendChild(content);
 
     //appending toast to container
     this.toastContainer.appendChild(toast);
@@ -25,24 +48,35 @@ export class ToastService {
     //starting fade-in animation
     this.toastRoutines.set(
       toast,
-      setInterval(this.fade, 10, toast, this.toastRoutines, true),
+      setInterval(this.fade, 10, toast, this.toastRoutines, true, this),
     );
 
     //storing element ref in array
-    this.toastList.push(toast);
+    this.toastMap.set(item.id, item.amount);
   }
 
   //TODO add parameter for toast
-  removeItem() {
+  removeToast(toast: HTMLDivElement) {
     //TODO validity check
-    let poppedToast = this.toastList[0];
+    //delete element from list
+    /*const index = this.toastList.indexOf(toast, 0);
+    if (index > -1) {
+      this.toastList.splice(index, 1);
+    }
+
+    //fade-out routine
     this.toastRoutines.set(
-      poppedToast,
-      setInterval(this.fade, 10, poppedToast, this.toastRoutines, false),
-    );
+      toast,
+      setInterval(this.fade, 10, toast, this.toastRoutines, false),
+    );*/
   }
 
-  fade(toast: HTMLDivElement, routines: Map<any, any>, fadeIn: boolean) {
+  fade(
+    toast: HTMLDivElement,
+    routines: Map<any, any>,
+    fadeIn: boolean,
+    t?: ToastService,
+  ) {
     var op: number = parseFloat(toast.style.opacity);
     var targetOp = fadeIn ? 1 : 0;
 
@@ -50,7 +84,11 @@ export class ToastService {
       clearInterval(routines.get(toast));
       routines.delete(toast);
 
-      if (!fadeIn) {
+      if (fadeIn) {
+        setTimeout(() => {
+          t.removeToast(toast);
+        }, 3000);
+      } else {
         toast.parentElement.removeChild(toast);
       }
       return;

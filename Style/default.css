@@ -33,12 +33,13 @@
 }
 
 .popup-toast {
-  height: 143px;
+  height: 140px;
   width: 323px;
 
-  display: block;
+  display: inline;
 
   margin-bottom: 40px;
+  padding: 0;
 
   background-image: url('../Assets/popup/toast.png');
   background-size: cover;
