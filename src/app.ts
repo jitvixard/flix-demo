@@ -5,44 +5,22 @@ class App {
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
-  toastContainer: HTMLElement;
   toastService = new ToastService();
 
-  count = 0;
-
-  toastList = new Array();
-
   constructor() {
-    this.styleElementRef = document.getElementById('hotbarStyle');
-
-    this.toastContainer = document.getElementById('toast-container');
+    this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
 
     window.addEventListener('resize', (e: Event) => this.onResize()); //resizing event
 
     let addBtn = document.getElementById('addItemButton'); //adding event to button
-    addBtn.addEventListener('click', (e: Event) => this.addItem());
+    addBtn.addEventListener('click', (e: Event) => this.toastService.addItem());
+
     let rmvBtn = document.getElementById('removeItemButton'); //adding event to button
-    rmvBtn.addEventListener('click', (e: Event) => this.removeItem());
+    rmvBtn.addEventListener('click', (e: Event) =>
+      this.toastService.removeItem(),
+    );
 
     this.onResize();
-  }
-
-  addItem() {
-    let toast = document.createElement('div');
-    toast.className = 'popup-toast';
-    let text = document.createTextNode(this.count.toString());
-    this.count++;
-    toast.appendChild(text);
-
-    this.toastContainer.appendChild(toast);
-
-    this.toastList.push(toast);
-  }
-
-  removeItem() {
-    let poppedToast = this.toastList.pop();
-
-    this.toastContainer.removeChild(poppedToast);
   }
 
   onResize() {
@@ -58,8 +36,6 @@ class App {
         .setAttribute('href', this.defaultStyleSheet);
     }
   }
-
-  //TODO Add Methods for button handling
 }
 
 new App();
