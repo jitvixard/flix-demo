@@ -1,9 +1,12 @@
+import { ToastService } from './services/toast.service';
+
 class App {
   styleElementRef: HTMLElement;
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
   toastContainer: HTMLElement;
+  toastService = new ToastService();
 
   count = 0;
 
