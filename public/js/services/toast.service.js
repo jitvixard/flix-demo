@@ -4,23 +4,23 @@ exports.ToastService = void 0;
 var ToastService = /** @class */ (function () {
     function ToastService() {
         this.toastMap = new Map();
-        this.elementIntervals = new Map();
+        this.activeToast = new Map();
+        this.fadeIntervals = new Map();
+        this.removeTimeouts = new Map();
+        this.itemQueue = new Array();
         this.toastContainer = document.getElementById('toast-container');
     }
     ToastService.prototype.add = function (itemToAdd) {
-        this.upsertItem(itemToAdd, this.elementIntervals, this);
+        this.upsertItem(itemToAdd, this.fadeIntervals, this);
     };
-    ToastService.prototype.upsertItem = function (itemToAdd, intervalMap, t) {
-        itemToAdd = this.toastMap.has(itemToAdd.id)
-            ? this.getExisting(itemToAdd)
-            : this.createToastElement(itemToAdd);
-        this.elementIntervals.set(itemToAdd.id, setInterval(this.fade, 10, itemToAdd, intervalMap, t, true));
+    ToastService.prototype.pop = function () {
+        if (this.itemQueue.length > 0) {
+            var poppedToast = this.itemQueue.pop();
+            this.activeToast.set(poppedToast.id, poppedToast);
+            this.fadeIntervals.set(poppedToast.id, setInterval(this.fade, 10, poppedToast, this.fadeIntervals, this, true));
+        }
     };
-    //TODO add parameter for toast
     ToastService.prototype.removeToast = function (itemToFade, intervalMap, t) {
-        //TODO validity check
-        //delete element from list
-        //stopping timeout
         if (!t.toastMap.has(itemToFade.id))
             return;
         if (intervalMap.has(itemToFade.id)) {
@@ -34,11 +34,11 @@ var ToastService = /** @class */ (function () {
         var ref = itemToFade.elementRef;
         var op = parseFloat(ref.style.opacity);
         var targetOp = fadeIn ? 1 : 0;
-        if (op === targetOp) {
+        if ((fadeIn && op >= targetOp) || (!fadeIn && op <= targetOp)) {
             clearInterval(intervalMap.get(itemToFade.id));
             intervalMap.delete(itemToFade.id);
             if (fadeIn) {
-                intervalMap.set(itemToFade.id, setTimeout(t.removeToast, 3000, itemToFade, intervalMap, t));
+                t.removeTimeouts.set(itemToFade.id, setTimeout(t.removeToast, 3000, itemToFade, intervalMap, t));
             }
             else {
                 t.deleteElement(itemToFade, t);
@@ -77,11 +77,15 @@ var ToastService = /** @class */ (function () {
     };
     ToastService.prototype.getExisting = function (item) {
         //stopping timeout
-        if (this.elementIntervals.has(item.id)) {
-            var intervalId = this.elementIntervals.get(item.id);
-            clearTimeout(intervalId);
+        if (this.fadeIntervals.has(item.id)) {
+            var intervalId = this.fadeIntervals.get(item.id);
             clearInterval(intervalId);
-            this.elementIntervals.delete(item.id);
+            this.fadeIntervals.delete(item.id);
+        }
+        if (this.removeTimeouts.has(item.id)) {
+            var intervalId = this.removeTimeouts.get(item.id);
+            clearTimeout(intervalId);
+            this.removeTimeouts.delete(item.id);
         }
         var exsistingItem = this.toastMap.get(item.id);
         //update amount
@@ -92,10 +96,26 @@ var ToastService = /** @class */ (function () {
             exsistingItem.amount + ' x ' + exsistingItem.displayName + ' Added';
         return exsistingItem;
     };
+    ToastService.prototype.upsertItem = function (itemToAdd, intervalMap, t) {
+        itemToAdd = this.toastMap.has(itemToAdd.id)
+            ? this.getExisting(itemToAdd)
+            : this.createToastElement(itemToAdd);
+        if (this.activeToast.size >= 2 && !this.activeToast.has(itemToAdd.id)) {
+            this.itemQueue.push(itemToAdd);
+            return;
+        }
+        this.activeToast.set(itemToAdd.id, itemToAdd);
+        this.fadeIntervals.set(itemToAdd.id, setInterval(this.fade, 10, itemToAdd, intervalMap, t, true));
+    };
     ToastService.prototype.deleteElement = function (item, t) {
         var ref = item.elementRef;
         ref.parentElement.removeChild(ref);
         t.toastMap.delete(item.id);
+        var shouldPop = t.activeToast.size >= 2;
+        if (t.activeToast.has(item.id))
+            t.activeToast.delete(item.id);
+        if (shouldPop)
+            t.pop();
     };
     return ToastService;
 }());

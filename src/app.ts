@@ -15,17 +15,17 @@ class App {
 
     window.addEventListener('resize', (e: Event) => this.onResize()); //resizing event
 
-    let bananaBtn = document.getElementById('addBananaButton'); //adding event to button
+    let bananaBtn = document.getElementById('addDemoBananaButton'); //adding event to button
     bananaBtn.addEventListener('click', (e: Event) =>
       this.toastService.add(new Banana(1)),
     );
 
-    let carrotBtn = document.getElementById('addCarrotButton'); //adding event to button
+    let carrotBtn = document.getElementById('addDemoCarrotButton'); //adding event to button
     carrotBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Carrot(1)),
+      this.toastService.add(new Carrot(3)),
     );
 
-    let pearBtn = document.getElementById('addPearButton'); //adding event to button
+    let pearBtn = document.getElementById('addDemoPearButton'); //adding event to button
     pearBtn.addEventListener('click', (e: Event) =>
       this.toastService.add(new Pear(1)),
     );
