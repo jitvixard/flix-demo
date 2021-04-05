@@ -1,7 +1,7 @@
 export abstract class AbstractItem {
   public readonly id: string;
   public readonly displayName: string;
-  public readonly amount: number;
+  public amount: number;
 
   public elementRef: HTMLDivElement;
   public routineId: number;

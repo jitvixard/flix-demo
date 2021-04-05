@@ -2,23 +2,68 @@ import { AbstractItem as Item } from './../model/item';
 
 export class ToastService {
   toastContainer: HTMLElement;
-  toastMap = new Map<string, number>();
+  public toastMap = new Map<string, Item>();
 
-  toastRoutines = new Map<HTMLDivElement, number>();
+  elementIntervals = new Map<string, number>();
 
   constructor() {
     this.toastContainer = document.getElementById('toast-container');
-    console.log(this.toastContainer);
   }
 
-  addItem(item: Item) {
-    if (this.toastMap.has(item.id)) {
+  add(itemToAdd: Item) {
+    this.upsertItem(itemToAdd, this.elementIntervals, this);
+  }
+
+  private removeToast(
+    itemToFade: Item,
+    intervalMap: Map<string, number>,
+    t: ToastService,
+  ) {
+    if (!t.toastMap.has(itemToFade.id)) return;
+
+    if (intervalMap.has(itemToFade.id)) {
+      clearTimeout(intervalMap.get(itemToFade.id));
+      intervalMap.delete(itemToFade.id);
+    }
+
+    //fade-out routine
+    intervalMap.set(
+      itemToFade.id,
+      setInterval(t.fade, 10, itemToFade, intervalMap, t, false),
+    );
+  }
+
+  fade(
+    itemToFade: Item,
+    intervalMap: Map<string, number>,
+    t: ToastService,
+    fadeIn: boolean,
+  ) {
+    const ref = itemToFade.elementRef;
+
+    let op: number = parseFloat(ref.style.opacity);
+    const targetOp = fadeIn ? 1 : 0;
+
+    if (op === targetOp) {
+      clearInterval(intervalMap.get(itemToFade.id));
+      intervalMap.delete(itemToFade.id);
+
+      if (fadeIn) {
+        intervalMap.set(
+          itemToFade.id,
+          setTimeout(t.removeToast, 3000, itemToFade, intervalMap, t),
+        );
+      } else {
+        t.deleteElement(itemToFade, t);
+      }
       return;
     }
 
-    //update amount
-    let amount = item.amount;
+    op = fadeIn ? op + 0.1 : op - 0.01;
+    ref.style.opacity = op.toString();
+  }
 
+  private createToastElement(item: Item): Item {
     //create toast element and set opacity
     let toast = document.createElement('div');
     toast.className = 'popup-toast';
@@ -32,10 +77,11 @@ export class ToastService {
     let image = document.createElement('img');
     image.setAttribute('src', item.getPath());
 
-    //set conent text
+    //set text
     let text = document.createElement('p');
-    text.innerText = amount + ' x ' + item.displayName + ' Added';
+    text.innerText = item.amount + ' x ' + item.displayName + ' Added';
 
+    //append elements to pop-up
     content.appendChild(image);
     content.appendChild(text);
 
@@ -45,56 +91,54 @@ export class ToastService {
     //appending toast to container
     this.toastContainer.appendChild(toast);
 
-    //starting fade-in animation
-    this.toastRoutines.set(
-      toast,
-      setInterval(this.fade, 10, toast, this.toastRoutines, true, this),
-    );
+    //setting to model
+    item.elementRef = toast;
 
-    //storing element ref in array
-    this.toastMap.set(item.id, item.amount);
+    //storing
+    this.toastMap.set(item.id, item);
+
+    return item;
   }
 
-  //TODO add parameter for toast
-  removeToast(toast: HTMLDivElement) {
-    //TODO validity check
-    //delete element from list
-    /*const index = this.toastList.indexOf(toast, 0);
-    if (index > -1) {
-      this.toastList.splice(index, 1);
+  private getExisting(item: Item): Item {
+    //stopping timeout
+    if (this.elementIntervals.has(item.id)) {
+      let intervalId = this.elementIntervals.get(item.id);
+      clearTimeout(intervalId);
+      clearInterval(intervalId);
+      this.elementIntervals.delete(item.id);
     }
 
-    //fade-out routine
-    this.toastRoutines.set(
-      toast,
-      setInterval(this.fade, 10, toast, this.toastRoutines, false),
-    );*/
+    let exsistingItem = this.toastMap.get(item.id);
+    //update amount
+    exsistingItem.amount += item.amount;
+    //update text
+    let textNode = exsistingItem.elementRef.querySelector('p');
+    textNode.textContent =
+      exsistingItem.amount + ' x ' + exsistingItem.displayName + ' Added';
+
+    return exsistingItem;
   }
 
-  fade(
-    toast: HTMLDivElement,
-    routines: Map<any, any>,
-    fadeIn: boolean,
-    t?: ToastService,
+  private upsertItem(
+    itemToAdd: Item,
+    intervalMap: Map<string, number>,
+    t: ToastService,
   ) {
-    var op: number = parseFloat(toast.style.opacity);
-    var targetOp = fadeIn ? 1 : 0;
+    itemToAdd = this.toastMap.has(itemToAdd.id)
+      ? this.getExisting(itemToAdd)
+      : this.createToastElement(itemToAdd);
 
-    if (op === targetOp) {
-      clearInterval(routines.get(toast));
-      routines.delete(toast);
+    this.elementIntervals.set(
+      itemToAdd.id,
+      setInterval(this.fade, 10, itemToAdd, intervalMap, t, true),
+    );
+  }
 
-      if (fadeIn) {
-        setTimeout(() => {
-          t.removeToast(toast);
-        }, 3000);
-      } else {
-        toast.parentElement.removeChild(toast);
-      }
-      return;
-    }
+  private deleteElement(item: Item, t: ToastService) {
+    let ref = item.elementRef;
+    ref.parentElement.removeChild(ref);
 
-    op = fadeIn ? op + 0.1 : op - 0.01;
-    toast.style.opacity = op.toString();
+    t.toastMap.delete(item.id);
   }
 }
