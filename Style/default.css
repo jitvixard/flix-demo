@@ -1,48 +1,47 @@
 .hotbar {
-    /*grid related display*/
-    display: grid;
+  /*grid related display*/
+  display: grid;
 
-    /*positioning*/
-    bottom: 40px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+  /*positioning*/
+  bottom: 40px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .hotbar-item {
-    height: 132px;
-    width: 132px;
+  height: 132px;
+  width: 132px;
 
-    background-image: url("../Assets/hotbar/hotbar-item.png");
-    background-size:     cover;                 
-    background-repeat:   no-repeat;
-    background-position: center center;  
+  background-image: url('../Assets/hotbar/hotbar-item.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
-.toast-container {
-    left: 25px;
+#toast-container {
+  left: 25px;
 
-    height: 720px;
+  height: 720px;
 
-    bottom: 0;
+  bottom: 0;
 
-    position: absolute;
+  position: absolute;
 
-    display: flex;
-    flex-direction: column-reverse;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .popup-toast {
-    height: 143px;
-    width: 323px;
+  height: 143px;
+  width: 323px;
 
-    display: block;
+  display: block;
 
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 
-    background-image: url("../Assets/popup/toast.png");
-    background-size:     cover;                 
-    background-repeat:   no-repeat;
-    background-position: center center;  
+  background-image: url('../Assets/popup/toast.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
-  

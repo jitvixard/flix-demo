@@ -1,5 +1,5 @@
 interface Item {
-    id: string;
-    pathToAsset: string;
-    amount: number;
+  id: string;
+  pathToAsset: string;
+  amount: number;
 }
