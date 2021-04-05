@@ -146,13 +146,11 @@ export class ToastService {
     intervalMap: Map<string, number>,
     t: ToastService,
   ) {
-    console.log('upserting ' + itemToAdd.displayName);
     itemToAdd = this.toastMap.has(itemToAdd.id)
       ? this.getExisting(itemToAdd)
       : this.createToastElement(itemToAdd);
 
     if (this.activeToast.size >= 2 && !this.activeToast.has(itemToAdd.id)) {
-      console.log('queueing ' + itemToAdd.displayName);
       this.itemQueue.push(itemToAdd);
       return;
     }
