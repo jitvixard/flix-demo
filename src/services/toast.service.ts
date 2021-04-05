@@ -1,17 +1,33 @@
 import { AbstractItem as Item } from './../model/item';
 
 export class ToastService {
-  toastContainer: HTMLElement;
   public toastMap = new Map<string, Item>();
+  public activeToast = new Map<string, Item>();
 
-  elementIntervals = new Map<string, number>();
+  fadeIntervals = new Map<string, number>();
+  removeTimeouts = new Map<string, number>();
+
+  itemQueue = new Array<Item>();
+
+  toastContainer: HTMLElement;
 
   constructor() {
     this.toastContainer = document.getElementById('toast-container');
   }
 
   add(itemToAdd: Item) {
-    this.upsertItem(itemToAdd, this.elementIntervals, this);
+    this.upsertItem(itemToAdd, this.fadeIntervals, this);
+  }
+
+  pop() {
+    if (this.itemQueue.length > 0) {
+      let poppedToast = this.itemQueue.pop();
+      this.activeToast.set(poppedToast.id, poppedToast);
+      this.fadeIntervals.set(
+        poppedToast.id,
+        setInterval(this.fade, 10, poppedToast, this.fadeIntervals, this, true),
+      );
+    }
   }
 
   private removeToast(
@@ -44,12 +60,12 @@ export class ToastService {
     let op: number = parseFloat(ref.style.opacity);
     const targetOp = fadeIn ? 1 : 0;
 
-    if (op === targetOp) {
+    if ((fadeIn && op >= targetOp) || (!fadeIn && op <= targetOp)) {
       clearInterval(intervalMap.get(itemToFade.id));
       intervalMap.delete(itemToFade.id);
 
       if (fadeIn) {
-        intervalMap.set(
+        t.removeTimeouts.set(
           itemToFade.id,
           setTimeout(t.removeToast, 3000, itemToFade, intervalMap, t),
         );
@@ -102,11 +118,16 @@ export class ToastService {
 
   private getExisting(item: Item): Item {
     //stopping timeout
-    if (this.elementIntervals.has(item.id)) {
-      let intervalId = this.elementIntervals.get(item.id);
-      clearTimeout(intervalId);
+    if (this.fadeIntervals.has(item.id)) {
+      let intervalId = this.fadeIntervals.get(item.id);
       clearInterval(intervalId);
-      this.elementIntervals.delete(item.id);
+      this.fadeIntervals.delete(item.id);
+    }
+
+    if (this.removeTimeouts.has(item.id)) {
+      let intervalId = this.removeTimeouts.get(item.id);
+      clearTimeout(intervalId);
+      this.removeTimeouts.delete(item.id);
     }
 
     let exsistingItem = this.toastMap.get(item.id);
@@ -125,11 +146,20 @@ export class ToastService {
     intervalMap: Map<string, number>,
     t: ToastService,
   ) {
+    console.log('upserting ' + itemToAdd.displayName);
     itemToAdd = this.toastMap.has(itemToAdd.id)
       ? this.getExisting(itemToAdd)
       : this.createToastElement(itemToAdd);
 
-    this.elementIntervals.set(
+    if (this.activeToast.size >= 2 && !this.activeToast.has(itemToAdd.id)) {
+      console.log('queueing ' + itemToAdd.displayName);
+      this.itemQueue.push(itemToAdd);
+      return;
+    }
+
+    this.activeToast.set(itemToAdd.id, itemToAdd);
+
+    this.fadeIntervals.set(
       itemToAdd.id,
       setInterval(this.fade, 10, itemToAdd, intervalMap, t, true),
     );
@@ -140,5 +170,11 @@ export class ToastService {
     ref.parentElement.removeChild(ref);
 
     t.toastMap.delete(item.id);
+
+    let shouldPop = t.activeToast.size >= 2;
+
+    if (t.activeToast.has(item.id)) t.activeToast.delete(item.id);
+
+    if (shouldPop) t.pop();
   }
 }
