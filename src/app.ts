@@ -32,6 +32,11 @@ class App {
       this.toastService.add(new Pear(1)),
     );
 
+    let cascadeOnBtn = document.getElementById('cascadeOnButton');
+    cascadeOnBtn.addEventListener('click', (e: Event) => 
+      this.hotbarService.cascadeOff()
+    )
+
     this.onResize();
   }
 
