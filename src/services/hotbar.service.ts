@@ -5,6 +5,7 @@ export class HotbarService {
     hotbarCascadeOrder: HTMLElement[][];
 
     targetTranslate = 0;
+    translateDistance = 0;
 
     translateFullDistance = 130;
     translateReducedDistance = 230;
@@ -36,14 +37,22 @@ export class HotbarService {
             ? 0
             : this.hotbarCascadeOrder.length - 1;
 
+        this.cascadingOn = on;
 
-        let length = this.fullWidth 
+        console.log('cascading from index::' + index);
+
+        this.translateDistance = this.fullWidth 
             ? 130
             : 230;
-            
+        
+
+        console.log('has a cascade distance of ' + this.translateDistance);
+
         this.targetTranslate = on 
             ? 0
-            : length;
+            : this.translateDistance;
+
+        console.log('moving to a translation of ' + this.targetTranslate);
 
         this.runningInterval = setInterval(this.cascadeInterval.bind(this, index, Date.now()), 10);
 
@@ -51,16 +60,20 @@ export class HotbarService {
 
     private cascadeInterval = (index: number, startTime: number) => {
 
-        console.log('firing interval')
+        //console.log('firing interval')
 
-        let translateFraction = this.targetTranslate / 100;
-        let translateToSet = translateFraction * (Date.now() - startTime);
+        let translateFraction = this.translateDistance / 100;
+        let deltaTime = Date.now() - startTime;
+        deltaTime = deltaTime > 100 ? 100 : deltaTime;  
+        let translateToSet = Math.round(translateFraction * deltaTime);
 
-        if (translateToSet > this.targetTranslate) translateToSet = this.targetTranslate;
+        if (this.cascadingOn) translateToSet = this.translateDistance - translateToSet;
 
         this.hotbarCascadeOrder[index].forEach((ref) => {
             ref.style.transform = 'translateY(' + translateToSet + '%)'
         })
+
+        //console.log('[setting to :: ' + translateToSet + ']        [target is ::' + this.targetTranslate + ']')
 
         if (translateToSet === this.targetTranslate) {
             clearInterval(this.runningInterval);
@@ -80,7 +93,6 @@ export class HotbarService {
     }
 
     private onResize() {
-        console.log('resizing')
         let fullWidthOnResize = window.innerWidth >= 1200;
         if (this.fullWidth != fullWidthOnResize) {
             this.hotbarCascadeOrder = fullWidthOnResize 
@@ -118,16 +130,4 @@ export class HotbarService {
             [elementsInHotbar[9]],
         ];
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

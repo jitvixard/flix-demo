@@ -34,8 +34,13 @@ class App {
 
     let cascadeOnBtn = document.getElementById('cascadeOnButton');
     cascadeOnBtn.addEventListener('click', (e: Event) => 
+      this.hotbarService.cascadeOn()
+    );
+
+    let cascadeOffBtn = document.getElementById('cascadeOffButton');
+    cascadeOffBtn.addEventListener('click', (e: Event) => 
       this.hotbarService.cascadeOff()
-    )
+    );
 
     this.onResize();
   }
