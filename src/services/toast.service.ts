@@ -141,9 +141,7 @@ export class ToastService {
     return exsistingItem;
   }
 
-  private upsertItem(
-    itemToAdd: Item,
-  ) {
+  private upsertItem(itemToAdd: Item) {
     itemToAdd = this.toastMap.has(itemToAdd.id)
       ? this.getExisting(itemToAdd)
       : this.createToastElement(itemToAdd);
