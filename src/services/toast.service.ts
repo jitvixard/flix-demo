@@ -16,7 +16,7 @@ export class ToastService {
   }
 
   add(itemToAdd: Item) {
-    this.upsertItem(itemToAdd, this.fadeIntervals, this);
+    this.upsertItem(itemToAdd);
   }
 
   pop() {
@@ -143,8 +143,6 @@ export class ToastService {
 
   private upsertItem(
     itemToAdd: Item,
-    intervalMap: Map<string, number>,
-    t: ToastService,
   ) {
     itemToAdd = this.toastMap.has(itemToAdd.id)
       ? this.getExisting(itemToAdd)
@@ -159,7 +157,7 @@ export class ToastService {
 
     this.fadeIntervals.set(
       itemToAdd.id,
-      setInterval(this.fade, 10, itemToAdd, intervalMap, t, true),
+      setInterval(this.fade, 10, itemToAdd, this.fadeIntervals, this, true),
     );
   }
 

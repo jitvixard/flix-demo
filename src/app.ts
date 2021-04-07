@@ -1,6 +1,7 @@
 import { Banana } from './model/banana';
 import { Carrot } from './model/carrot';
 import { Pear } from './model/pear';
+import { HotbarService } from './services/hotbar.service';
 import { ToastService } from './services/toast.service';
 
 class App {
@@ -8,6 +9,7 @@ class App {
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
+  hotbarService = new HotbarService();
   toastService = new ToastService();
 
   constructor() {

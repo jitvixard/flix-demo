@@ -1,4 +1,4 @@
-.hotbar {
+#hotbar {
     /*grid related display*/
     grid-template-columns: repeat(5, 1fr);
 

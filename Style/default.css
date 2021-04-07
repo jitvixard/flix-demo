@@ -1,4 +1,8 @@
-.hotbar {
+body {
+  overflow: hidden;
+}
+
+#hotbar {
   /*grid related display*/
   display: grid;
 
@@ -30,6 +34,8 @@
 
   display: flex;
   flex-direction: column-reverse;
+
+  z-index: -1;
 }
 
 .popup-toast {
