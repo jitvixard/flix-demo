@@ -34,12 +34,22 @@ class App {
 
     let cascadeOnBtn = document.getElementById('cascadeOnButton');
     cascadeOnBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.cascadeOn(),
+      this.hotbarService.cascade(true),
     );
 
     let cascadeOffBtn = document.getElementById('cascadeOffButton');
     cascadeOffBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.cascadeOff(),
+      this.hotbarService.cascade(false),
+    );
+
+    let fadeOnbtn = document.getElementById('subtleFadeOnButton');
+    fadeOnbtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.fade(true),
+    );
+
+    let fadeOffbtn = document.getElementById('subtleFadeOffButton');
+    fadeOffbtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.fade(false),
     );
 
     this.onResize();
