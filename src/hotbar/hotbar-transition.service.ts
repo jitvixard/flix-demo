@@ -21,7 +21,7 @@ export class HotbarTransitionService {
   ) {
     this.onPosition = true;
     this.target = 0;
-    this.offPosition = this.axis === 'Y' ? 0 : -50;
+    this.offPosition = 0;
 
     this.hotbar = document.getElementById('hotbar');
   }
