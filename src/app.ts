@@ -3,6 +3,7 @@ import { Carrot } from './model/carrot';
 import { Pear } from './model/pear';
 import { Hotbar } from './hotbar/hotbar';
 import { ToastService } from './pop-up/toast.service';
+import { Bread } from './model/bread';
 
 class App {
   styleElementRef: HTMLElement;
@@ -68,11 +69,20 @@ class App {
     fadeOffbtn.addEventListener('click', (e: Event) =>
       this.hotbarService.fade(false),
     );
+
+    let breadBtn = document.getElementById('addBreadButton');
+    breadBtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.add(new Bread(1), 0),
+    );
   };
 
   bindResizeListener = () => {
-    window.addEventListener('resize', (e: Event) => this.onResize());
+    window.addEventListener('resize', (e: Event) => {
+      this.onResize();
+      this.hotbarService.resize();
+    });
     this.onResize();
+    this.hotbarService.resize();
   };
 }
 

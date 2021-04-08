@@ -18,14 +18,31 @@
       <h1>UI Demo <i>by Samuel Morgan</i></h1>
       <div id="app">
 
-        <input id="addDemoBananaButton" type="button" value="Add A Banana"></input>
-        <input id="addDemoCarrotButton" type="button" value="Add Three Carrots"></input>
-        <input id="addDemoPearButton" type="button" value="Add A Pear"></input>
-        <input id="cascadeOnButton" type="button" value="Cascade On"></input>
-        <input id="cascadeOffButton" type="button" value="Cascade Off"></input>
-        <input id="subtleFadeOnButton" type="button" value="Subtle Fade On"></input>
-        <input id="subtleFadeOffButton" type="button" value="Subtle Fade Off"></input>
-
+        <div id="controlPanel">
+          <div class="button-pane">
+            <div class="button-pane-title">Pop-up Toast</div>
+            <div class="button-pane-buttons">
+              <input id="addDemoBananaButton" type="button" value="Add A Banana"></input>
+              <input id="addDemoCarrotButton" type="button" value="Add Three Carrots"></input>
+              <input id="addDemoPearButton" type="button" value="Add A Pear"></input>
+            </div>
+          </div>
+          <div class="button-pane">
+            <div class="button-pane-title">Hotbar Animations</div>
+            <div class="button-pane-buttons">
+              <input id="cascadeOnButton" type="button" value="Cascade On"></input>
+              <input id="cascadeOffButton" type="button" value="Cascade Off"></input>
+              <input id="subtleFadeOnButton" type="button" value="Subtle Fade On"></input>
+              <input id="subtleFadeOffButton" type="button" value="Subtle Fade Off"></input>
+            </div>
+          </div>
+          <div class="button-pane">
+            <div class="button-pane-title">Hotbar Interactions</div>
+            <div class="button-pane-buttons">
+              <input id="addBreadButton" type="button" value="Add Loaf of Bread to Slot One"></input>
+            </div>
+          </div>
+        </div>
         <div id="toast-container"></div>
 
         <div id="hotbar-container">

@@ -2,6 +2,33 @@ body {
   overflow: hidden;
 }
 
+#controlPanel {
+  margin: auto;
+  width: 50%;
+
+  border: 3px solid green;
+
+  padding: 1.5%;
+  padding-bottom: 3.5%;
+
+  font-family: monospace;
+}
+
+.button-pane-title {
+  font-size: 16px;
+  display: block;
+
+  margin-bottom: 1%;
+  margin-top: 2%;
+
+  text-align: center;
+}
+
+.button-pane-buttons {
+  display: block;
+  text-align: center;
+}
+
 #hotbar-container {
   /*positioning*/
   bottom: 40px;
