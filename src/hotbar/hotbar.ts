@@ -32,17 +32,11 @@ export class Hotbar {
       'Y',
     );
 
-    const fadeOrder = <HTMLElement[]>(
-      (<any>document.getElementsByClassName('hotbar-item'))
-    );
-
-    console.log(fadeOrder);
-
     this.fadeService = new HotbarTransitionService(
-      [fadeOrder],
+      this.getAllInOrder(),
       1000,
-      130,
-      230,
+      1200,
+      700,
       'X',
     );
 
@@ -103,5 +97,24 @@ export class Hotbar {
       [elementsInHotbar[8]],
       [elementsInHotbar[9]],
     ];
+  }
+
+  private getAllInOrder(): HTMLElement[][] {
+    let elementsInHotbar = <HTMLElement[]>(
+      (<any>document.getElementsByClassName('hotbar-item'))
+    );
+    return [[
+      elementsInHotbar[0],
+      elementsInHotbar[1],
+      elementsInHotbar[2],
+      elementsInHotbar[3],
+      elementsInHotbar[4],
+      elementsInHotbar[5],
+      elementsInHotbar[6],
+      elementsInHotbar[7],
+      elementsInHotbar[8],
+      elementsInHotbar[9],
+    ]]
+
   }
 }

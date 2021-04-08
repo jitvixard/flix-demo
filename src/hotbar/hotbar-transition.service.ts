@@ -1,14 +1,16 @@
 export class HotbarTransitionService {
-  protected onPosition: boolean;
+  private hotbar: HTMLElement;
 
-  protected currentIndex: number;
-  protected currentRoutine: number;
+  private onPosition: boolean;
 
-  protected target: number;
-  protected offPosition: number;
+  private currentIndex: number;
+  private currentRoutine: number;
 
-  protected current: number;
-  protected currentOfRow: number;
+  private target: number;
+  private offPosition: number;
+
+  private current: number;
+  private currentOfRow: number;
 
   constructor(
     private elementsInOrder: HTMLElement[][],
@@ -20,6 +22,8 @@ export class HotbarTransitionService {
     this.onPosition = true;
     this.target = 0;
     this.offPosition = 0;
+
+    this.hotbar = document.getElementById('hotbar');
   }
 
   on() {
@@ -56,7 +60,10 @@ export class HotbarTransitionService {
     }
   }
 
-  protected animate(index: number, startTime: number) {
+  private animate(index: number, startTime: number) {
+    const opacity = this.getOpacity(startTime, this.animationLength);
+
+
     if (this.current === this.target) {
       //end if at target
       clearInterval(this.currentRoutine);
@@ -64,6 +71,14 @@ export class HotbarTransitionService {
         this.moveOnToNextColumn.bind(this, index),
         this.animationLength,
       );
+
+      if (this.axis === 'Y') {
+        this.setForElements(this.target, opacity, this.elementsInOrder[index]);
+      }
+      else if (this.axis === 'X') {
+        this.setForElements(this.target, opacity, [this.hotbar]);
+      }
+
       return;
     }
 
@@ -74,30 +89,32 @@ export class HotbarTransitionService {
     translateToSet = this.onPosition
       ? this.offPosition - translateToSet
       : translateToSet;
-    const opacity = this.getOpacity(startTime, this.animationLength);
-    this.elementsInOrder[index].forEach((element) => {
-      this.setTranslate(element, translateToSet);
-      element.style.opacity = opacity.toString();
-    });
+
+    if (this.axis === 'Y') {
+      this.setForElements(translateToSet, opacity, this.elementsInOrder[index]);
+    }
+    else if (this.axis === 'X') {
+      this.setForElements(translateToSet, opacity, [this.hotbar]);
+    }
 
     this.current = translateToSet;
   }
 
-  protected prepForeOn() {
+  private prepForeOn() {
     this.onPosition = true;
     this.currentIndex = 0;
     this.target = 0;
     this.currentOfRow = this.offPosition;
   }
 
-  protected prepForOff() {
+  private prepForOff() {
     this.onPosition = false;
     this.currentIndex = this.elementsInOrder.length - 1;
     this.target = this.offPosition;
     this.currentOfRow = 0;
   }
 
-  protected moveOnToNextColumn(completedIndex: number) {
+  private moveOnToNextColumn(completedIndex: number) {
     clearTimeout(this.currentRoutine);
 
     completedIndex = this.onPosition ? ++completedIndex : --completedIndex;
@@ -116,7 +133,7 @@ export class HotbarTransitionService {
     );
   }
 
-  protected lerpBetweenCurrentAndTarget(
+  private lerpBetweenCurrentAndTarget(
     startTime: number,
     interval: number,
   ): number {
@@ -127,12 +144,19 @@ export class HotbarTransitionService {
     return Math.round(deltaTime * fraction);
   }
 
-  protected getOpacity(startTime: number, interval: number) {
+  private getOpacity(startTime: number, interval: number) {
     let opac = (Date.now() - startTime) / interval;
     opac = opac > 1 ? 1 : opac;
     return this.onPosition ? opac : 1 - opac;
   }
 
-  protected setTranslate = (element: HTMLElement, value: number) =>
+  private setForElements(translate: number, opacity: number, elements: HTMLElement[]) {
+    elements.forEach(element => {
+      this.setTranslate(element, translate);
+      element.style.opacity = opacity.toString();
+    });
+  }
+
+  private setTranslate = (element: HTMLElement, value: number) =>
     (element.style.transform = 'translate' + this.axis + '(' + value + '%)');
 }
