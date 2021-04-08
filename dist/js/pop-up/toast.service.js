@@ -11,7 +11,7 @@ var ToastService = /** @class */ (function () {
         this.toastContainer = document.getElementById('toast-container');
     }
     ToastService.prototype.add = function (itemToAdd) {
-        this.upsertItem(itemToAdd, this.fadeIntervals, this);
+        this.upsertItem(itemToAdd);
     };
     ToastService.prototype.pop = function () {
         if (this.itemQueue.length > 0) {
@@ -96,7 +96,7 @@ var ToastService = /** @class */ (function () {
             exsistingItem.amount + ' x ' + exsistingItem.displayName + ' Added';
         return exsistingItem;
     };
-    ToastService.prototype.upsertItem = function (itemToAdd, intervalMap, t) {
+    ToastService.prototype.upsertItem = function (itemToAdd) {
         itemToAdd = this.toastMap.has(itemToAdd.id)
             ? this.getExisting(itemToAdd)
             : this.createToastElement(itemToAdd);
@@ -105,7 +105,7 @@ var ToastService = /** @class */ (function () {
             return;
         }
         this.activeToast.set(itemToAdd.id, itemToAdd);
-        this.fadeIntervals.set(itemToAdd.id, setInterval(this.fade, 10, itemToAdd, intervalMap, t, true));
+        this.fadeIntervals.set(itemToAdd.id, setInterval(this.fade, 10, itemToAdd, this.fadeIntervals, this, true));
     };
     ToastService.prototype.deleteElement = function (item, t) {
         var ref = item.elementRef;

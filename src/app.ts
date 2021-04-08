@@ -1,39 +1,25 @@
 import { Banana } from './model/banana';
 import { Carrot } from './model/carrot';
 import { Pear } from './model/pear';
-import { ToastService } from './services/toast.service';
+import { Hotbar } from './hotbar/hotbar';
+import { ToastService } from './pop-up/toast.service';
 
 class App {
   styleElementRef: HTMLElement;
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
+  hotbarService = new Hotbar();
   toastService = new ToastService();
 
   constructor() {
     this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
 
-    window.addEventListener('resize', (e: Event) => this.onResize()); //resizing event
-
-    let bananaBtn = document.getElementById('addDemoBananaButton'); //adding event to button
-    bananaBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Banana(1)),
-    );
-
-    let carrotBtn = document.getElementById('addDemoCarrotButton'); //adding event to button
-    carrotBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Carrot(3)),
-    );
-
-    let pearBtn = document.getElementById('addDemoPearButton'); //adding event to button
-    pearBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Pear(1)),
-    );
-
-    this.onResize();
+    this.bindButtons();
+    this.bindResizeListener();
   }
 
-  onResize() {
+  onResize = () => {
     const styleId = 'hotbarStyle';
 
     if (window.innerWidth < 1200) {
@@ -45,7 +31,49 @@ class App {
         .getElementById(styleId)
         .setAttribute('href', this.defaultStyleSheet);
     }
-  }
+  };
+
+  bindButtons = () => {
+    let bananaBtn = document.getElementById('addDemoBananaButton');
+    bananaBtn.addEventListener('click', (e: Event) =>
+      this.toastService.add(new Banana(1)),
+    );
+
+    let carrotBtn = document.getElementById('addDemoCarrotButton');
+    carrotBtn.addEventListener('click', (e: Event) =>
+      this.toastService.add(new Carrot(3)),
+    );
+
+    let pearBtn = document.getElementById('addDemoPearButton');
+    pearBtn.addEventListener('click', (e: Event) =>
+      this.toastService.add(new Pear(1)),
+    );
+
+    let cascadeOnBtn = document.getElementById('cascadeOnButton');
+    cascadeOnBtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.cascade(true),
+    );
+
+    let cascadeOffBtn = document.getElementById('cascadeOffButton');
+    cascadeOffBtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.cascade(false),
+    );
+
+    let fadeOnbtn = document.getElementById('subtleFadeOnButton');
+    fadeOnbtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.fade(true),
+    );
+
+    let fadeOffbtn = document.getElementById('subtleFadeOffButton');
+    fadeOffbtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.fade(false),
+    );
+  };
+
+  bindResizeListener = () => {
+    window.addEventListener('resize', (e: Event) => this.onResize());
+    this.onResize();
+  };
 }
 
 new App();

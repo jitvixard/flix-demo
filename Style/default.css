@@ -1,12 +1,18 @@
-.hotbar {
-  /*grid related display*/
-  display: grid;
+body {
+  overflow: hidden;
+}
 
+#hotbar-container {
   /*positioning*/
   bottom: 40px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+}
+
+#hotbar {
+  /*grid related display*/
+  display: grid;
 }
 
 .hotbar-item {
@@ -30,6 +36,8 @@
 
   display: flex;
   flex-direction: column-reverse;
+
+  z-index: -1;
 }
 
 .popup-toast {

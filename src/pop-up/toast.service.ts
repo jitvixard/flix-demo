@@ -1,4 +1,4 @@
-import { AbstractItem as Item } from './../model/item';
+import { AbstractItem as Item } from '../model/item';
 
 export class ToastService {
   public toastMap = new Map<string, Item>();
@@ -16,7 +16,7 @@ export class ToastService {
   }
 
   add(itemToAdd: Item) {
-    this.upsertItem(itemToAdd, this.fadeIntervals, this);
+    this.upsertItem(itemToAdd);
   }
 
   pop() {
@@ -141,11 +141,7 @@ export class ToastService {
     return exsistingItem;
   }
 
-  private upsertItem(
-    itemToAdd: Item,
-    intervalMap: Map<string, number>,
-    t: ToastService,
-  ) {
+  private upsertItem(itemToAdd: Item) {
     itemToAdd = this.toastMap.has(itemToAdd.id)
       ? this.getExisting(itemToAdd)
       : this.createToastElement(itemToAdd);
@@ -159,7 +155,7 @@ export class ToastService {
 
     this.fadeIntervals.set(
       itemToAdd.id,
-      setInterval(this.fade, 10, itemToAdd, intervalMap, t, true),
+      setInterval(this.fade, 10, itemToAdd, this.fadeIntervals, this, true),
     );
   }
 
