@@ -21,7 +21,7 @@ export class HotbarTransitionService {
   ) {
     this.onPosition = true;
     this.target = 0;
-    this.offPosition = 0;
+    this.offPosition = this.axis === 'Y' ? 0 : -50;
 
     this.hotbar = document.getElementById('hotbar');
   }
@@ -137,7 +137,7 @@ export class HotbarTransitionService {
     startTime: number,
     interval: number,
   ): number {
-    const transformDistance = Math.abs(this.currentOfRow - this.target);
+    const transformDistance = Math.abs(this.currentOfRow) + Math.abs(this.target);
     const fraction = transformDistance / interval;
     let deltaTime = Date.now() - startTime;
     deltaTime = deltaTime > interval ? interval : deltaTime;
