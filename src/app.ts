@@ -2,7 +2,7 @@ import { Banana } from './model/banana';
 import { Carrot } from './model/carrot';
 import { Pear } from './model/pear';
 import { Hotbar } from './hotbar/hotbar';
-import { ToastService } from './services/toast.service';
+import { ToastService } from './pop-up/toast.service';
 
 class App {
   styleElementRef: HTMLElement;
@@ -15,8 +15,25 @@ class App {
   constructor() {
     this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
 
-    window.addEventListener('resize', (e: Event) => this.onResize());
+    this.bindButtons();
+    this.bindResizeListener();
+  }
 
+  onResize = () => {
+    const styleId = 'hotbarStyle';
+
+    if (window.innerWidth < 1200) {
+      document
+        .getElementById(styleId)
+        .setAttribute('href', this.smallerStyleSheet);
+    } else {
+      document
+        .getElementById(styleId)
+        .setAttribute('href', this.defaultStyleSheet);
+    }
+  };
+
+  bindButtons = () => {
     let bananaBtn = document.getElementById('addDemoBananaButton');
     bananaBtn.addEventListener('click', (e: Event) =>
       this.toastService.add(new Banana(1)),
@@ -51,23 +68,12 @@ class App {
     fadeOffbtn.addEventListener('click', (e: Event) =>
       this.hotbarService.fade(false),
     );
+  };
 
+  bindResizeListener = () => {
+    window.addEventListener('resize', (e: Event) => this.onResize());
     this.onResize();
-  }
-
-  onResize() {
-    const styleId = 'hotbarStyle';
-
-    if (window.innerWidth < 1200) {
-      document
-        .getElementById(styleId)
-        .setAttribute('href', this.smallerStyleSheet);
-    } else {
-      document
-        .getElementById(styleId)
-        .setAttribute('href', this.defaultStyleSheet);
-    }
-  }
+  };
 }
 
 new App();

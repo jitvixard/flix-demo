@@ -63,7 +63,6 @@ export class HotbarTransitionService {
   private animate(index: number, startTime: number) {
     const opacity = this.getOpacity(startTime, this.animationLength);
 
-
     if (this.current === this.target) {
       //end if at target
       clearInterval(this.currentRoutine);
@@ -74,8 +73,7 @@ export class HotbarTransitionService {
 
       if (this.axis === 'Y') {
         this.setForElements(this.target, opacity, this.elementsInOrder[index]);
-      }
-      else if (this.axis === 'X') {
+      } else if (this.axis === 'X') {
         this.setForElements(this.target, opacity, [this.hotbar]);
       }
 
@@ -92,8 +90,7 @@ export class HotbarTransitionService {
 
     if (this.axis === 'Y') {
       this.setForElements(translateToSet, opacity, this.elementsInOrder[index]);
-    }
-    else if (this.axis === 'X') {
+    } else if (this.axis === 'X') {
       this.setForElements(translateToSet, opacity, [this.hotbar]);
     }
 
@@ -137,7 +134,8 @@ export class HotbarTransitionService {
     startTime: number,
     interval: number,
   ): number {
-    const transformDistance = Math.abs(this.currentOfRow) + Math.abs(this.target);
+    const transformDistance =
+      Math.abs(this.currentOfRow) + Math.abs(this.target);
     const fraction = transformDistance / interval;
     let deltaTime = Date.now() - startTime;
     deltaTime = deltaTime > interval ? interval : deltaTime;
@@ -150,12 +148,15 @@ export class HotbarTransitionService {
     return this.onPosition ? opac : 1 - opac;
   }
 
-  private setForElements(translate: number, opacity: number, elements: HTMLElement[]) {
-    elements.forEach(element => {
+  private setForElements = (
+    translate: number,
+    opacity: number,
+    elements: HTMLElement[],
+  ) =>
+    elements.forEach((element) => {
       this.setTranslate(element, translate);
       element.style.opacity = opacity.toString();
     });
-  }
 
   private setTranslate = (element: HTMLElement, value: number) =>
     (element.style.transform = 'translate' + this.axis + '(' + value + '%)');
