@@ -1,3 +1,5 @@
+import { AbstractItem as Item } from '../model/item';
+import { HotbarItemService } from './hotbar-item.service';
 import { HotbarTransitionService } from './hotbar-transition.service';
 
 export class Hotbar {
@@ -5,6 +7,7 @@ export class Hotbar {
 
   cascadeService: HotbarTransitionService;
   fadeService: HotbarTransitionService;
+  itemService: HotbarItemService;
 
   targetTranslate = 0;
   translateDistance = 0;
@@ -19,10 +22,9 @@ export class Hotbar {
 
   constructor() {
     this.hotbarRef = document.getElementById('hotbar');
-    const cascadeOrder =
-      window.innerWidth > 1200
-        ? this.fullWidthOrder()
-        : this.reducedWidthOrder();
+    const cascadeOrder = this.getHotbarElements(window.innerWidth > 1200);
+
+    this.itemService = new HotbarItemService();
 
     this.cascadeService = new HotbarTransitionService(
       cascadeOrder,
@@ -33,16 +35,12 @@ export class Hotbar {
     );
 
     this.fadeService = new HotbarTransitionService(
-      this.getAllInOrder(),
+      this.getHotbarElements(),
       1000,
       1200,
       700,
       'X',
     );
-
-    window.addEventListener('resize', (e: Event) => this.onResize());
-
-    this.onResize();
   }
 
   cascade(on: boolean) {
@@ -55,66 +53,66 @@ export class Hotbar {
     else this.fadeService.off();
   }
 
-  private onResize() {
+  add(item: Item, atIndex?: number) {
+    this.itemService.add(item, atIndex);
+  }
+
+  resize() {
+    console.log('resizing');
     let fullWidthOnResize = window.innerWidth >= 1200;
     if (this.fullWidth != fullWidthOnResize) {
       //has changed?
-      let cascadeOrder = fullWidthOnResize
-        ? this.fullWidthOrder()
-        : this.reducedWidthOrder();
+      let cascadeOrder = this.getHotbarElements(fullWidthOnResize);
 
       this.cascadeService.updateWidth(fullWidthOnResize, cascadeOrder);
       this.fadeService.updateWidth(fullWidthOnResize, undefined);
     }
   }
 
-  private reducedWidthOrder(): HTMLElement[][] {
+  private getHotbarElements = (fullwidth?: boolean): HTMLElement[][] => {
     let elementsInHotbar = <HTMLElement[]>(
       (<any>document.getElementsByClassName('hotbar-item'))
     );
-    return [
-      [elementsInHotbar[0], elementsInHotbar[5]],
-      [elementsInHotbar[1], elementsInHotbar[6]],
-      [elementsInHotbar[2], elementsInHotbar[7]],
-      [elementsInHotbar[3], elementsInHotbar[8]],
-      [elementsInHotbar[4], elementsInHotbar[9]],
-    ];
-  }
 
-  private fullWidthOrder(): HTMLElement[][] {
-    let elementsInHotbar = <HTMLElement[]>(
-      (<any>document.getElementsByClassName('hotbar-item'))
-    );
-    return [
-      [elementsInHotbar[0]],
-      [elementsInHotbar[1]],
-      [elementsInHotbar[2]],
-      [elementsInHotbar[3]],
-      [elementsInHotbar[4]],
-      [elementsInHotbar[5]],
-      [elementsInHotbar[6]],
-      [elementsInHotbar[7]],
-      [elementsInHotbar[8]],
-      [elementsInHotbar[9]],
-    ];
-  }
+    if (fullwidth === undefined) {
+      //getting all elements in order
+      return [
+        [
+          elementsInHotbar[0],
+          elementsInHotbar[1],
+          elementsInHotbar[2],
+          elementsInHotbar[3],
+          elementsInHotbar[4],
+          elementsInHotbar[5],
+          elementsInHotbar[6],
+          elementsInHotbar[7],
+          elementsInHotbar[8],
+          elementsInHotbar[9],
+        ],
+      ];
+    }
 
-  private getAllInOrder(): HTMLElement[][] {
-    let elementsInHotbar = <HTMLElement[]>(
-      (<any>document.getElementsByClassName('hotbar-item'))
-    );
-    return [[
-      elementsInHotbar[0],
-      elementsInHotbar[1],
-      elementsInHotbar[2],
-      elementsInHotbar[3],
-      elementsInHotbar[4],
-      elementsInHotbar[5],
-      elementsInHotbar[6],
-      elementsInHotbar[7],
-      elementsInHotbar[8],
-      elementsInHotbar[9],
-    ]]
-
-  }
+    if (fullwidth) {
+      return [
+        [elementsInHotbar[0]],
+        [elementsInHotbar[1]],
+        [elementsInHotbar[2]],
+        [elementsInHotbar[3]],
+        [elementsInHotbar[4]],
+        [elementsInHotbar[5]],
+        [elementsInHotbar[6]],
+        [elementsInHotbar[7]],
+        [elementsInHotbar[8]],
+        [elementsInHotbar[9]],
+      ];
+    } else {
+      return [
+        [elementsInHotbar[0], elementsInHotbar[5]],
+        [elementsInHotbar[1], elementsInHotbar[6]],
+        [elementsInHotbar[2], elementsInHotbar[7]],
+        [elementsInHotbar[3], elementsInHotbar[8]],
+        [elementsInHotbar[4], elementsInHotbar[9]],
+      ];
+    }
+  };
 }

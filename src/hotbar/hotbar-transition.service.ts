@@ -84,6 +84,7 @@ export class HotbarTransitionService {
       startTime,
       this.animationLength,
     );
+
     translateToSet = this.onPosition
       ? this.offPosition - translateToSet
       : translateToSet;
@@ -101,6 +102,7 @@ export class HotbarTransitionService {
     this.onPosition = true;
     this.currentIndex = 0;
     this.target = 0;
+    this.current = this.offPosition;
     this.currentOfRow = this.offPosition;
   }
 
@@ -109,6 +111,7 @@ export class HotbarTransitionService {
     this.currentIndex = this.elementsInOrder.length - 1;
     this.target = this.offPosition;
     this.currentOfRow = 0;
+    this.current = 0;
   }
 
   private moveOnToNextColumn(completedIndex: number) {
@@ -152,11 +155,14 @@ export class HotbarTransitionService {
     translate: number,
     opacity: number,
     elements: HTMLElement[],
-  ) =>
+  ) => {
     elements.forEach((element) => {
       this.setTranslate(element, translate);
       element.style.opacity = opacity.toString();
     });
+
+    this.current = translate;
+  };
 
   private setTranslate = (element: HTMLElement, value: number) =>
     (element.style.transform = 'translate' + this.axis + '(' + value + '%)');
