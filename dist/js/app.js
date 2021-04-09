@@ -5,6 +5,7 @@ var carrot_1 = require("./model/carrot");
 var pear_1 = require("./model/pear");
 var hotbar_1 = require("./hotbar/hotbar");
 var toast_service_1 = require("./pop-up/toast.service");
+var bread_1 = require("./model/bread");
 var App = /** @class */ (function () {
     function App() {
         var _this = this;
@@ -54,13 +55,51 @@ var App = /** @class */ (function () {
             fadeOffbtn.addEventListener('click', function (e) {
                 return _this.hotbarService.fade(false);
             });
+            var breadBtn = document.getElementById('addBreadButton');
+            breadBtn.addEventListener('click', function (e) {
+                return _this.hotbarService.add(new bread_1.Bread(1), 0);
+            });
         };
         this.bindResizeListener = function () {
-            window.addEventListener('resize', function (e) { return _this.onResize(); });
+            window.addEventListener('resize', function (e) {
+                _this.onResize();
+                _this.hotbarService.resize();
+            });
             _this.onResize();
         };
         this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
-        this.bindButtons();
+        var bananaBtn = document.getElementById('addDemoBananaButton');
+        bananaBtn.addEventListener('click', function (e) {
+            return _this.toastService.add(new banana_1.Banana(1));
+        });
+        var carrotBtn = document.getElementById('addDemoCarrotButton');
+        carrotBtn.addEventListener('click', function (e) {
+            return _this.toastService.add(new carrot_1.Carrot(3));
+        });
+        var pearBtn = document.getElementById('addDemoPearButton');
+        pearBtn.addEventListener('click', function (e) {
+            return _this.toastService.add(new pear_1.Pear(1));
+        });
+        var cascadeOnBtn = document.getElementById('cascadeOnButton');
+        cascadeOnBtn.addEventListener('click', function (e) {
+            return _this.hotbarService.cascade(true);
+        });
+        var cascadeOffBtn = document.getElementById('cascadeOffButton');
+        cascadeOffBtn.addEventListener('click', function (e) {
+            return _this.hotbarService.cascade(false);
+        });
+        var fadeOnbtn = document.getElementById('subtleFadeOnButton');
+        fadeOnbtn.addEventListener('click', function (e) {
+            return _this.hotbarService.fade(true);
+        });
+        var fadeOffbtn = document.getElementById('subtleFadeOffButton');
+        fadeOffbtn.addEventListener('click', function (e) {
+            return _this.hotbarService.fade(false);
+        });
+        var breadBtn = document.getElementById('addBreadButton');
+        breadBtn.addEventListener('click', function (e) {
+            return _this.hotbarService.add(new bread_1.Bread(1), 0);
+        });
         this.bindResizeListener();
     }
     return App;
