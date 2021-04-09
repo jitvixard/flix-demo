@@ -112,7 +112,6 @@ export class HotbarItemService {
     startTime: number,
     initial: boolean,
     update?: boolean,
-<<<<<<< HEAD
   ) => {
     //setting current image/icon
     if (this.currentIcon === undefined) {
@@ -120,14 +119,6 @@ export class HotbarItemService {
     }
 
     //setting target
-=======
-    selection?: boolean,
-  ) => {
-    if (this.currentImage === undefined) {
-      this.currentImage = item.elementRef.getElementsByTagName('img')[0];
-    }
-
->>>>>>> 4e3517fb9751ed90500ef26acbb198f0aa5cd541
     const startSize = initial ? 1 : 1.25;
     const targetSize = initial ? 1.25 : 1;
 
@@ -138,29 +129,17 @@ export class HotbarItemService {
       startSize,
       targetSize,
     );
-<<<<<<< HEAD
     this.currentIcon.style.scale = this.currentScale.toFixed(2);
-=======
-    this.currentImage.style.scale = this.currentScale.toFixed(2);
->>>>>>> 4e3517fb9751ed90500ef26acbb198f0aa5cd541
 
     //lerp transparency if fading in
     if (initial && !update) {
       const targetOpacity = this.lerp(startTime, this.interval, 0, 1);
-<<<<<<< HEAD
       this.currentIcon.style.opacity = targetOpacity.toString();
-=======
-      this.currentImage.style.opacity = targetOpacity.toString();
->>>>>>> 4e3517fb9751ed90500ef26acbb198f0aa5cd541
     }
 
     //ending animation if target is met
     if (this.currentScale.toFixed(2) === targetSize.toFixed(2)) {
-<<<<<<< HEAD
       this.currentIcon = undefined;
-=======
-      this.currentImage = undefined;
->>>>>>> 4e3517fb9751ed90500ef26acbb198f0aa5cd541
       if (initial) {
         this.intervalMap.set(
           item.id,
@@ -175,11 +154,7 @@ export class HotbarItemService {
       return;
     }
 
-<<<<<<< HEAD
     //running again if not
-=======
-    //running again
->>>>>>> 4e3517fb9751ed90500ef26acbb198f0aa5cd541
     this.intervalMap.set(
       item.id,
       setTimeout(
