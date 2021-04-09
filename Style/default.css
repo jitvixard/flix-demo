@@ -1,5 +1,7 @@
 body {
   overflow: hidden;
+
+  font-family: monospace;
 }
 
 #controlPanel {
@@ -10,8 +12,6 @@ body {
 
   padding: 1.5%;
   padding-bottom: 3.5%;
-
-  font-family: monospace;
 }
 
 .button-pane-title {
@@ -50,6 +50,33 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+}
+
+.hotbar-content {
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.hotbar-content img {
+  width: 100%;
+  margin: auto;
+
+  grid-column: 2 / 8;
+  grid-row: 2 / 7;
+}
+
+.hotbar-content p {
+  width: 100%;
+
+  margin: auto;
+  margin-bottom: 5px;
+
+  grid-column-start: 7;
+  grid-row-end: 9;
 }
 
 #toast-container {
