@@ -80,6 +80,16 @@ class App {
     orangeBtn.addEventListener('click', (e: Event) =>
       this.hotbarService.add(new Orange(1), 5),
     );
+
+    let selectOne = document.getElementById('selectOne');
+    selectOne.addEventListener('click', (e: Event) =>
+      this.hotbarService.select(0),
+    );
+
+    let selectSeven = document.getElementById('selectSeven');
+    selectSeven.addEventListener('click', (e: Event) =>
+      this.hotbarService.select(6),
+    );
   };
 
   bindResizeListener = () => {

@@ -11,7 +11,19 @@
   width: 136px;
 }
 
+#hotbar-item-1 .selected {
+  background-image: url('../Assets/hotbar/focused/hotbar-left-corner.png');
+  height: 100%;
+  width: 100%;
+}
+
 #hotbar-item-10 {
   background-image: url('../Assets/hotbar/hotbar-right-corner.png');
   width: 136px;
+}
+
+#hotbar-item-10 .selected {
+  background-image: url('../Assets/hotbar/focused/hotbar-right-corner.png');
+  height: 100%;
+  width: 100%;
 }

@@ -52,6 +52,22 @@ body {
   background-position: center center;
 }
 
+.hotbar-item .selected {
+  max-height: 100%;
+  max-width: 100%;
+
+  background-image: url('../Assets/hotbar/hotbar-item.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.hotbar-item .selected {
+  background-image: url('../Assets/hotbar/focused/hotbar-item.png');
+  height: 100%;
+  width: 100%;
+}
+
 .hotbar-content {
   height: 100%;
   width: 100%;
