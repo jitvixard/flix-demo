@@ -4,7 +4,6 @@ export class HotbarItemService {
   private readonly hotbarSlots: HTMLElement[];
   private readonly hotbarContents: Item[];
 
-  private readonly contentClassname: string;
   private readonly interval: number;
 
   private currentImage: HTMLElement;
@@ -35,7 +34,6 @@ export class HotbarItemService {
           (atIndex === undefined && currentRef === undefined)) &&
         unplaced
       ) {
-        console.log('upserting ' + item.id + ' at index ' + index);
         this.upsert(item, index);
         unplaced = false;
       }
@@ -47,38 +45,26 @@ export class HotbarItemService {
     let exsisting = this.hotbarContents[atIndex];
 
     if (exsisting !== undefined && exsisting.id !== item.id) {
-      console.log('clearing old element');
       this.clearSlot(atIndex);
       exsisting = undefined;
     }
 
     if (exsisting === undefined) {
-      console.log('creating new element');
       this.createIcon(item, atIndex);
     } else {
       if (this.intervalMap.has(exsisting.id)) {
-        this.intervalMap.set(
-          item.id,
-          setTimeout(this.queue.bind(this, item, atIndex), 5),
-        );
+        this.queue(item, atIndex);
         return;
       }
 
       exsisting.amount += item.amount;
       this.updateIcon(exsisting);
-      console.log(exsisting);
-      this.intervalMap.set(
-        item.id,
-        setTimeout(
-          this.playAnimation.bind(this, exsisting, Date.now(), true, true),
-          5,
-        ),
-      );
+      return;
     }
 
     this.intervalMap.set(
       item.id,
-      setTimeout(this.playAnimation.bind(this, item, Date.now(), true), 5),
+      setTimeout(this.addToHotbar.bind(this, item, Date.now(), true), 5),
     );
   };
 
@@ -115,23 +101,25 @@ export class HotbarItemService {
   private updateIcon = (item: Item) => {
     let textElement = item.elementRef.getElementsByTagName('p')[0];
     textElement.innerText = item.amount.toString();
+    this.intervalMap.set(
+      item.id,
+      setTimeout(this.addToHotbar.bind(this, item, Date.now(), true, true), 5),
+    );
   };
 
-  private playAnimation = (
+  private addToHotbar = (
     item: Item,
     startTime: number,
     initial: boolean,
     update?: boolean,
+    selection?: boolean,
   ) => {
-    //fresh reference in case fo changes
     if (this.currentImage === undefined) {
       this.currentImage = item.elementRef.getElementsByTagName('img')[0];
     }
 
     const startSize = initial ? 1 : 1.25;
     const targetSize = initial ? 1.25 : 1;
-
-    let styleString = '';
 
     //lerp scale
     this.currentScale = this.lerp(
@@ -148,8 +136,6 @@ export class HotbarItemService {
       this.currentImage.style.opacity = targetOpacity.toString();
     }
 
-    //this.currentImage.setAttribute('style', styleString);
-
     //ending animation if target is met
     if (this.currentScale.toFixed(2) === targetSize.toFixed(2)) {
       this.currentImage = undefined;
@@ -157,7 +143,7 @@ export class HotbarItemService {
         this.intervalMap.set(
           item.id,
           setTimeout(
-            this.playAnimation.bind(this, item, Date.now(), false, update),
+            this.addToHotbar.bind(this, item, Date.now(), false, update),
             5,
           ),
         );
@@ -171,7 +157,7 @@ export class HotbarItemService {
     this.intervalMap.set(
       item.id,
       setTimeout(
-        this.playAnimation.bind(this, item, startTime, initial, update),
+        this.addToHotbar.bind(this, item, startTime, initial, update),
         5,
       ),
     );
@@ -180,18 +166,22 @@ export class HotbarItemService {
   private lerp = (
     startTime: number,
     interval: number,
-    startSize: number,
-    targetSize: number,
+    startValue: number,
+    targetValue: number,
   ): number => {
-    const fraction = Math.abs(targetSize - startSize) / interval;
+    const fraction = Math.abs(targetValue - startValue) / interval;
     let deltaTime = Date.now() - startTime;
     deltaTime = deltaTime > interval ? interval : deltaTime;
-    return startSize > targetSize
-      ? startSize - deltaTime * fraction
-      : startSize + deltaTime * fraction;
+    return startValue > targetValue
+      ? startValue - deltaTime * fraction
+      : startValue + deltaTime * fraction;
   };
 
   private queue(item: Item, atIndex: number) {
+    setTimeout(this.canPop.bind(this, item, atIndex), 5);
+  }
+
+  private canPop(item: Item, atIndex: number) {
     if (this.intervalMap.has(item.id)) {
       this.intervalMap.set(
         item.id,

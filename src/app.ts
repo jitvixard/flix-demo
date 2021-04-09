@@ -4,6 +4,8 @@ import { Pear } from './model/pear';
 import { Hotbar } from './hotbar/hotbar';
 import { ToastService } from './pop-up/toast.service';
 import { Bread } from './model/bread';
+import { Apple } from './model/apple';
+import { Orange } from './model/orange';
 
 class App {
   styleElementRef: HTMLElement;
@@ -21,16 +23,10 @@ class App {
   }
 
   onResize = () => {
-    const styleId = 'hotbarStyle';
-
     if (window.innerWidth < 1200) {
-      document
-        .getElementById(styleId)
-        .setAttribute('href', this.smallerStyleSheet);
+      this.styleElementRef.setAttribute('href', this.smallerStyleSheet);
     } else {
-      document
-        .getElementById(styleId)
-        .setAttribute('href', this.defaultStyleSheet);
+      this.styleElementRef.setAttribute('href', this.defaultStyleSheet);
     }
   };
 
@@ -70,9 +66,19 @@ class App {
       this.hotbarService.fade(false),
     );
 
+    let appleBtn = document.getElementById('addAppleButton');
+    appleBtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.add(new Apple(1), 1),
+    );
+
     let breadBtn = document.getElementById('addBreadButton');
     breadBtn.addEventListener('click', (e: Event) =>
       this.hotbarService.add(new Bread(1), 0),
+    );
+
+    let orangeBtn = document.getElementById('addOrangeButton');
+    orangeBtn.addEventListener('click', (e: Event) =>
+      this.hotbarService.add(new Orange(1), 5),
     );
   };
 
