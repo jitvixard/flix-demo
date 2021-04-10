@@ -1,4 +1,5 @@
 import { AbstractItem as Item } from '../model/item';
+import '../util/util';
 
 export class HotbarItemService {
   private readonly hotbarSlots: HTMLElement[];
@@ -6,7 +7,7 @@ export class HotbarItemService {
 
   private readonly interval: number;
 
-  private currentImage: HTMLElement;
+  private currentIcon: HTMLElement;
 
   private readonly intervalMap = new Map<string, number>();
   private currentScale = 1;
@@ -112,33 +113,34 @@ export class HotbarItemService {
     startTime: number,
     initial: boolean,
     update?: boolean,
-    selection?: boolean,
   ) => {
-    if (this.currentImage === undefined) {
-      this.currentImage = item.elementRef.getElementsByTagName('img')[0];
+    //setting current image/icon
+    if (this.currentIcon === undefined) {
+      this.currentIcon = item.elementRef.getElementsByTagName('img')[0];
     }
 
+    //setting target
     const startSize = initial ? 1 : 1.25;
     const targetSize = initial ? 1.25 : 1;
 
     //lerp scale
-    this.currentScale = this.lerp(
+    this.currentScale = window.lerp(
       startTime,
       this.interval,
       startSize,
       targetSize,
     );
-    this.currentImage.style.scale = this.currentScale.toFixed(2);
+    this.currentIcon.style.scale = this.currentScale.toFixed(2);
 
     //lerp transparency if fading in
     if (initial && !update) {
-      const targetOpacity = this.lerp(startTime, this.interval, 0, 1);
-      this.currentImage.style.opacity = targetOpacity.toString();
+      const targetOpacity = window.lerp(startTime, this.interval, 0, 1);
+      this.currentIcon.style.opacity = targetOpacity.toString();
     }
 
     //ending animation if target is met
     if (this.currentScale.toFixed(2) === targetSize.toFixed(2)) {
-      this.currentImage = undefined;
+      this.currentIcon = undefined;
       if (initial) {
         this.intervalMap.set(
           item.id,
@@ -153,7 +155,7 @@ export class HotbarItemService {
       return;
     }
 
-    //running again
+    //running again if not
     this.intervalMap.set(
       item.id,
       setTimeout(
@@ -161,20 +163,6 @@ export class HotbarItemService {
         5,
       ),
     );
-  };
-
-  private lerp = (
-    startTime: number,
-    interval: number,
-    startValue: number,
-    targetValue: number,
-  ): number => {
-    const fraction = Math.abs(targetValue - startValue) / interval;
-    let deltaTime = Date.now() - startTime;
-    deltaTime = deltaTime > interval ? interval : deltaTime;
-    return startValue > targetValue
-      ? startValue - deltaTime * fraction
-      : startValue + deltaTime * fraction;
   };
 
   private queue(item: Item, atIndex: number) {
