@@ -1,26 +1,39 @@
 import { Hotbar } from './hotbar/hotbar';
-import { ToastService } from './pop-up/toast';
+import { Toast } from './pop-up/toast';
 import { bindButtons, bindResizeListener } from './util/bindings';
 
 export class App {
-  styleElementRef: HTMLElement;
+  hotbarStyleRef: HTMLElement;
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
-  hotbarService = new Hotbar();
-  toastService = new ToastService();
+  hotbar = new Hotbar();
+  toastService = new Toast();
+
+  fullWidth: boolean;
 
   constructor() {
-    this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
+    // *** references *** //
+    this.hotbarStyleRef = document.getElementById('hotbarStyle');
+
+    // *** bindings *** //
     bindButtons(this);
     bindResizeListener(this);
   }
 
   onResize = () => {
-    if (window.innerWidth < 1200) {
-      this.styleElementRef.setAttribute('href', this.smallerStyleSheet);
+    const isNowFullWidth = window.innerWidth > 1200;
+
+    if (this.fullWidth !== undefined && this.fullWidth == isNowFullWidth) {
+      return;
+    }
+
+    this.fullWidth = isNowFullWidth;
+
+    if (this.fullWidth) {
+      this.hotbarStyleRef.setAttribute('href', this.defaultStyleSheet);
     } else {
-      this.styleElementRef.setAttribute('href', this.defaultStyleSheet);
+      this.hotbarStyleRef.setAttribute('href', this.smallerStyleSheet);
     }
   };
 }
