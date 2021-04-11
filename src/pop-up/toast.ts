@@ -1,4 +1,4 @@
-import { AbstractItem as Item } from '../model/item';
+import { AbstractItem as Item } from '../model/items/abstract-item';
 
 export class ToastService {
   public toastMap = new Map<string, Item>();

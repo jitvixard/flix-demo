@@ -1,4 +1,4 @@
-import { AbstractItem } from './item';
+import { AbstractItem } from '../abstract-item';
 
 export class Banana extends AbstractItem {
   id = 'banana';

@@ -1,5 +1,5 @@
-import { AbstractItem as Item } from '../model/item';
-import '../util/util';
+import { AbstractItem as Item } from '../model/items/abstract-item';
+import '../util/transformation';
 
 export class HotbarItemService {
   private readonly hotbarSlots: HTMLElement[];
@@ -124,13 +124,13 @@ export class HotbarItemService {
     const targetSize = initial ? 1.25 : 1;
 
     //lerp scale
-    this.currentScale = window.lerp(
+    this.currentScale = window.scaleElement(
+      this.currentIcon,
+      targetSize,
+      startSize,
       startTime,
       this.interval,
-      startSize,
-      targetSize,
     );
-    this.currentIcon.style.scale = this.currentScale.toFixed(2);
 
     //lerp transparency if fading in
     if (initial && !update) {
@@ -163,6 +163,8 @@ export class HotbarItemService {
         5,
       ),
     );
+
+
   };
 
   private queue(item: Item, atIndex: number) {

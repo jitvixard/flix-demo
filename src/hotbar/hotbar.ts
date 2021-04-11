@@ -1,4 +1,4 @@
-import { AbstractItem as Item } from '../model/item';
+import { AbstractItem as Item } from '../model/items/abstract-item';
 import { HotbarItemService } from './hotbar-item.service';
 import { HotbarSelectionService } from './hotbar-selection.service';
 import { HotbarTransitionService } from './hotbar-transition.service';

@@ -1,11 +1,11 @@
-import { Banana } from './model/banana';
-import { Carrot } from './model/carrot';
-import { Pear } from './model/pear';
+import { Banana } from './model/items/impl/banana';
+import { Carrot } from './model/items/impl/carrot';
+import { Pear } from './model/items/impl/pear';
 import { Hotbar } from './hotbar/hotbar';
-import { ToastService } from './pop-up/toast.service';
-import { Bread } from './model/bread';
-import { Apple } from './model/apple';
-import { Orange } from './model/orange';
+import { ToastService } from './pop-up/toast';
+import { Bread } from './model/items/impl/bread';
+import { Apple } from './model/items/impl/apple';
+import { Orange } from './model/items/impl/orange';
 
 class App {
   styleElementRef: HTMLElement;
