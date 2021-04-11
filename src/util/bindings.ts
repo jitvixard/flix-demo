@@ -6,7 +6,12 @@ import { Carrot } from '../model/items/impl/carrot';
 import { Orange } from '../model/items/impl/orange';
 import { Pear } from '../model/items/impl/pear';
 
-export function bindButtons(app: App) {
+/**
+ * @param app Main application buttons are being bound to.
+ *
+ * Utility function to bind all buttons.
+ */
+export function bindButtons(app: App): void {
   let bananaBtn = document.getElementById('addDemoBananaButton');
   bananaBtn.addEventListener('click', (e: Event) =>
     app.toastService.add(new Banana(1)),
@@ -66,4 +71,13 @@ export function bindButtons(app: App) {
   selectSeven.addEventListener('click', (e: Event) =>
     app.hotbarService.select(6),
   );
+}
+
+export function bindResizeListener(app: App) {
+  window.addEventListener('resize', (e: Event) => {
+    app.onResize();
+    app.hotbarService.resize();
+  });
+  app.onResize();
+  app.hotbarService.resize();
 }

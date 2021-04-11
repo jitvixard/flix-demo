@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Hotbar = void 0;
 var hotbar_item_service_1 = require("./hotbar-item.service");
+var hotbar_selection_service_1 = require("./hotbar-selection.service");
 var hotbar_transition_service_1 = require("./hotbar-transition.service");
 var Hotbar = /** @class */ (function () {
     function Hotbar() {
@@ -55,6 +56,7 @@ var Hotbar = /** @class */ (function () {
         this.hotbarRef = document.getElementById('hotbar');
         var cascadeOrder = this.getHotbarElements(window.innerWidth > 1200);
         this.itemService = new hotbar_item_service_1.HotbarItemService();
+        this.selectService = new hotbar_selection_service_1.HotbarSelectionService(this.getHotbarElements()[0]);
         this.cascadeService = new hotbar_transition_service_1.HotbarTransitionService(cascadeOrder, 100, 130, 230, 'Y');
         this.fadeService = new hotbar_transition_service_1.HotbarTransitionService(this.getHotbarElements(), 1000, 1200, 700, 'X');
     }
@@ -74,6 +76,7 @@ var Hotbar = /** @class */ (function () {
         this.itemService.add(item, atIndex);
     };
     Hotbar.prototype.resize = function () {
+        console.log('resizing');
         var fullWidthOnResize = window.innerWidth >= 1200;
         if (this.fullWidth != fullWidthOnResize) {
             //has changed?
@@ -81,6 +84,12 @@ var Hotbar = /** @class */ (function () {
             this.cascadeService.updateWidth(fullWidthOnResize, cascadeOrder);
             this.fadeService.updateWidth(fullWidthOnResize, undefined);
         }
+    };
+    Hotbar.prototype.select = function (index, element) {
+        if (element !== undefined)
+            this.selectService.selectElement(element);
+        else if (index !== undefined)
+            this.selectService.selectAtIndex(index);
     };
     return Hotbar;
 }());
