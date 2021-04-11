@@ -10,9 +10,14 @@ export class App {
   hotbar = new Hotbar();
   toastService = new Toast();
 
+  animationMap: Map<HTMLElement, number>;
+
   fullWidth: boolean;
 
   constructor() {
+    // *** instantiation *** //
+    this.animationMap = new Map<HTMLElement, number>();
+
     // *** references *** //
     this.hotbarStyleRef = document.getElementById('hotbarStyle');
 

@@ -4,6 +4,8 @@ export abstract class AbstractItem {
   public amount: number;
 
   public elementRef: HTMLDivElement;
+  public iconRef: HTMLImageElement;
+
   public routineId: number;
 
   constructor(amount: number) {
