@@ -29,6 +29,7 @@ export class Hotbar {
     this.itemService = new HotbarItemService();
     this.selectService = new HotbarSelectionService(
       this.getHotbarElements()[0],
+      500,
     );
 
     this.cascadeService = new HotbarTransitionService(
@@ -42,8 +43,8 @@ export class Hotbar {
     this.fadeService = new HotbarTransitionService(
       this.getHotbarElements(),
       1000,
-      1200,
-      700,
+      125,
+      125,
       'X',
     );
   }

@@ -40,6 +40,8 @@ export class App {
     } else {
       this.hotbarStyleRef.setAttribute('href', this.smallerStyleSheet);
     }
+
+    this.hotbar.resize();
   };
 }
 

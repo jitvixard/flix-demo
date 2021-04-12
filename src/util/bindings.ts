@@ -73,8 +73,6 @@ export function bindButtons(app: App): void {
 export function bindResizeListener(app: App) {
   window.addEventListener('resize', (e: Event) => {
     app.onResize();
-    app.hotbar.resize();
   });
   app.onResize();
-  app.hotbar.resize();
 }

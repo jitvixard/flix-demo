@@ -117,6 +117,31 @@ function setElementOpacity(
   return targetOpacity;
 }
 
+function getElementTransform(element: HTMLElement): number {
+  let exp = new RegExp('d+[.]d+');
+  return parseFloat(exp.exec(element.style.transform)[0]);
+}
+
+function getElementOpacity(element: HTMLElement) {
+  return parseFloat(element.style.opacity);
+}
+
+function getElementScale(element: HTMLElement): number {
+  return parseFloat(element.style.scale);
+}
+
+function getElapsed(
+  interval: number,
+  startValue: number,
+  currentValue: number,
+  targetValue: number,
+): number {
+  return Math.round(
+    (interval / Math.abs(targetValue - startValue)) *
+      Math.abs(currentValue - startValue),
+  );
+}
+
 /**
  * Assigning utility function to window.
  * This would usually be allocated in a static class,
@@ -126,3 +151,6 @@ function setElementOpacity(
 (window as any).scaleElement = scaleElement;
 (window as any).setElementOpacity = setElementOpacity;
 (window as any).setElementTransform = setElementTransform;
+(window as any).getElementOpacity = getElementOpacity;
+(window as any).getElementScale = getElementScale;
+(window as any).getElapsed = getElapsed;
