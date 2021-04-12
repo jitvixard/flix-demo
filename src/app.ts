@@ -1,3 +1,4 @@
+import { AbstractItem as Item } from './model/items/abstract-item';
 import { Hotbar } from './hotbar/hotbar';
 import { Toast } from './pop-up/toast';
 import { bindButtons, bindResizeListener } from './util/bindings';
@@ -7,23 +8,27 @@ export class App {
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
-  hotbar = new Hotbar();
-  toastService = new Toast();
-
-  animationMap: Map<HTMLElement, number>;
+  private hotbar = new Hotbar();
+  private toast = new Toast();
 
   fullWidth: boolean;
 
   constructor() {
-    // *** instantiation *** //
-    this.animationMap = new Map<HTMLElement, number>();
-
     // *** references *** //
     this.hotbarStyleRef = document.getElementById('hotbarStyle');
 
     // *** bindings *** //
     bindButtons(this);
     bindResizeListener(this);
+  }
+
+  add(item: Item) {
+    this.hotbar.add(item);
+    this.toast.add(item);
+  }
+
+  select(index: number) {
+    this.hotbar.select(index);
   }
 
   onResize = () => {

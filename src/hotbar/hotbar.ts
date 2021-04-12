@@ -76,6 +76,7 @@ export class Hotbar {
   }
 
   select(index?: number, element?: HTMLElement) {
+    if (!this.itemService.itemPresent(element, index)) return;
     if (element !== undefined) this.selectService.selectElement(element);
     else if (index !== undefined) this.selectService.selectAtIndex(index);
   }

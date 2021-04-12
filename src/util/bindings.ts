@@ -3,6 +3,7 @@ import { Apple } from '../model/items/impl/apple';
 import { Banana } from '../model/items/impl/banana';
 import { Bread } from '../model/items/impl/bread';
 import { Carrot } from '../model/items/impl/carrot';
+import { getItemFromName } from '../model/items/abstract-item';
 import { Orange } from '../model/items/impl/orange';
 import { Pear } from '../model/items/impl/pear';
 
@@ -11,7 +12,9 @@ import { Pear } from '../model/items/impl/pear';
  *
  * Utility function to bind all buttons.
  */
-export function bindButtons(app: App): void {
+export function bindButtons(app: App): void
+{
+  
   let bananaBtn = document.getElementById('addDemoBananaButton');
   bananaBtn.addEventListener('click', (e: Event) =>
     app.toastService.add(new Banana(1)),
@@ -58,11 +61,26 @@ export function bindButtons(app: App): void {
     app.hotbar.add(new Orange(1), 5),
   );
 
-  let selectOne = document.getElementById('selectOne');
-  selectOne.addEventListener('click', (e: Event) => app.hotbar.select(0));
+  let itemParent = document.getElementById('item-buttons');
+  Array.from(itemParent.getElementsByTagName('input')).forEach((element) => {
+    let buttonValue = element.getAttribute('value');
+    if (buttonValue !== undefined)
+      element.addEventListener('click', (e: Event) =>
+        app.add(getItemFromName(buttonValue)),
+      );
+  });
 
-  let selectSeven = document.getElementById('selectSeven');
-  selectSeven.addEventListener('click', (e: Event) => app.hotbar.select(6));
+  let selectionParent = document.getElementById('selection-buttons');
+  Array.from(selectionParent.getElementsByTagName('input')).forEach(
+    (element) => {
+      let buttonValue = Number(element.getAttribute('value'));
+      if (buttonValue !== undefined)
+        element.addEventListener('click', (e: Event) =>
+          //app.hotbar.select(buttonValue - 1),
+          app.select(buttonValue - 1),
+        );
+    },
+  );
 }
 
 /**

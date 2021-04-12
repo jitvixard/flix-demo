@@ -41,6 +41,20 @@ export class HotbarItemService {
     }
   }
 
+  itemPresent(element?: HTMLElement, atIndex?: number): boolean {
+    let isPresent = false;
+
+    if (atIndex !== undefined)
+      return this.hotbarContents[atIndex] !== undefined;
+    else if (element !== undefined) {
+      this.hotbarContents.forEach((item) => {
+        if (item.elementRef === element) isPresent = true;
+      });
+    }
+
+    return isPresent;
+  }
+
   private upsert = (item: Item, atIndex: number) => {
     let exsisting = this.hotbarContents[atIndex];
 

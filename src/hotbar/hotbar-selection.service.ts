@@ -29,11 +29,7 @@ export class HotbarSelectionService {
     }
 
     let selectionElement = this.createSelectionElement();
-    let hotbarElementChildren = [].slice.call(element.children);
-
-    if (hotbarElementChildren.length > 0)
-      element.insertBefore(selectionElement, hotbarElementChildren[0]);
-    else element.appendChild(selectionElement);
+    element.appendChild(selectionElement);
 
     this.currentlySelected = selectionElement.parentElement;
     let iconElement = this.currentlySelected.getElementsByTagName('img')[0];
@@ -97,7 +93,7 @@ export class HotbarSelectionService {
     const targetOpacity = selecting ? 1 : 0;
     const targetScale = selecting ? 1.25 : 1;
 
-    let interval = selecting ? this.animationLength : this.animationLength / 2;
+    let interval = this.animationLength;
     if (startingScale !== undefined && startingOpacity !== undefined) {
       const startValueToPass = targetScale === 1.25 ? 1 : 1.25;
       interval = interval = getElapsed(

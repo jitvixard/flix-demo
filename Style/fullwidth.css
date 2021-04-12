@@ -1,3 +1,7 @@
+#selection-buttons {
+  grid-template-columns: repeat(10, 1fr);
+}
+
 #hotbar {
   /*grid related display*/
   grid-template-columns: repeat(10, 1fr);
