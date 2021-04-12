@@ -1,4 +1,4 @@
-import { AbstractItem as Item } from '../model/item';
+import { AbstractItem as Item } from '../model/items/abstract-item';
 import { HotbarItemService } from './hotbar-item.service';
 import { HotbarSelectionService } from './hotbar-selection.service';
 import { HotbarTransitionService } from './hotbar-transition.service';
@@ -29,6 +29,7 @@ export class Hotbar {
     this.itemService = new HotbarItemService();
     this.selectService = new HotbarSelectionService(
       this.getHotbarElements()[0],
+      500,
     );
 
     this.cascadeService = new HotbarTransitionService(
@@ -42,8 +43,8 @@ export class Hotbar {
     this.fadeService = new HotbarTransitionService(
       this.getHotbarElements(),
       1000,
-      1200,
-      700,
+      125,
+      125,
       'X',
     );
   }
@@ -63,10 +64,9 @@ export class Hotbar {
   }
 
   resize() {
-    console.log('resizing');
     let fullWidthOnResize = window.innerWidth >= 1200;
+    //if the width has changed between full and reduced
     if (this.fullWidth != fullWidthOnResize) {
-      //has changed?
       let cascadeOrder = this.getHotbarElements(fullWidthOnResize);
 
       this.cascadeService.updateWidth(fullWidthOnResize, cascadeOrder);
@@ -75,6 +75,7 @@ export class Hotbar {
   }
 
   select(index?: number, element?: HTMLElement) {
+    if (!this.itemService.itemPresent(element, index)) return;
     if (element !== undefined) this.selectService.selectElement(element);
     else if (index !== undefined) this.selectService.selectAtIndex(index);
   }

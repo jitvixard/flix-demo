@@ -1,3 +1,7 @@
+#selection-buttons {
+  grid-template-columns: repeat(5, 1fr);
+}
+
 #hotbar {
   /*grid related display*/
   grid-template-columns: repeat(5, 1fr);
@@ -13,8 +17,7 @@
 
 #hotbar-item-1 .selected {
   background-image: url('../Assets/hotbar/focused/hotbar-left-corner.png');
-  height: 100%;
-  width: 100%;
+  width: 136px;
 }
 
 #hotbar-item-5 {
@@ -44,7 +47,7 @@
   width: 136px;
 }
 
-#hotbar-item-1 .selected {
+#hotbar-item-10 .selected {
   background-image: url('../Assets/hotbar/focused/hotbar-right-bottom.png');
   height: 100%;
   width: 100%;

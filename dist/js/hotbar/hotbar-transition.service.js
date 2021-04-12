@@ -10,10 +10,11 @@ var HotbarTransitionService = /** @class */ (function () {
         this.reducedWidthDistance = reducedWidthDistance;
         this.axis = axis;
         this.setForElements = function (translate, opacity, elements) {
-            return elements.forEach(function (element) {
+            elements.forEach(function (element) {
                 _this.setTranslate(element, translate);
                 element.style.opacity = opacity.toString();
             });
+            _this.current = translate;
         };
         this.setTranslate = function (element, value) {
             return (element.style.transform = 'translate' + _this.axis + '(' + value + '%)');
@@ -77,6 +78,7 @@ var HotbarTransitionService = /** @class */ (function () {
         this.onPosition = true;
         this.currentIndex = 0;
         this.target = 0;
+        this.current = this.offPosition;
         this.currentOfRow = this.offPosition;
     };
     HotbarTransitionService.prototype.prepForOff = function () {
@@ -84,6 +86,7 @@ var HotbarTransitionService = /** @class */ (function () {
         this.currentIndex = this.elementsInOrder.length - 1;
         this.target = this.offPosition;
         this.currentOfRow = 0;
+        this.current = 0;
     };
     HotbarTransitionService.prototype.moveOnToNextColumn = function (completedIndex) {
         clearTimeout(this.currentRoutine);

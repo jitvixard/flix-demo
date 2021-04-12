@@ -1,6 +1,6 @@
-import { AbstractItem as Item } from '../model/item';
+import { AbstractItem as Item } from '../model/items/abstract-item';
 
-export class ToastService {
+export class Toast {
   public toastMap = new Map<string, Item>();
   public activeToast = new Map<string, Item>();
 
@@ -33,7 +33,7 @@ export class ToastService {
   private removeToast(
     itemToFade: Item,
     intervalMap: Map<string, number>,
-    t: ToastService,
+    t: Toast,
   ) {
     if (!t.toastMap.has(itemToFade.id)) return;
 
@@ -52,7 +52,7 @@ export class ToastService {
   fade(
     itemToFade: Item,
     intervalMap: Map<string, number>,
-    t: ToastService,
+    t: Toast,
     fadeIn: boolean,
   ) {
     const ref = itemToFade.elementRef;
@@ -159,7 +159,7 @@ export class ToastService {
     );
   }
 
-  private deleteElement(item: Item, t: ToastService) {
+  private deleteElement(item: Item, t: Toast) {
     let ref = item.elementRef;
     ref.parentElement.removeChild(ref);
 

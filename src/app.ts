@@ -1,104 +1,58 @@
-import { Banana } from './model/banana';
-import { Carrot } from './model/carrot';
-import { Pear } from './model/pear';
+import { AbstractItem as Item } from './model/items/abstract-item';
 import { Hotbar } from './hotbar/hotbar';
-import { ToastService } from './pop-up/toast.service';
-import { Bread } from './model/bread';
-import { Apple } from './model/apple';
-import { Orange } from './model/orange';
+import { Toast } from './pop-up/toast';
+import { bindButtons, bindResizeListener } from './util/bindings';
 
-class App {
-  styleElementRef: HTMLElement;
+export class App {
+  hotbarStyleRef: HTMLElement;
   defaultStyleSheet = 'Style/fullwidth.css';
   smallerStyleSheet = 'Style/reducedwidth.css';
 
-  hotbarService = new Hotbar();
-  toastService = new ToastService();
+  private hotbar = new Hotbar();
+  private toast = new Toast();
+
+  fullWidth: boolean;
 
   constructor() {
-    this.styleElementRef = document.getElementById('hotbarStyle'); //ref to hotbar style
+    // *** references *** //
+    this.hotbarStyleRef = document.getElementById('hotbarStyle');
 
-    this.bindButtons();
-    this.bindResizeListener();
+    // *** bindings *** //
+    bindButtons(this);
+    bindResizeListener(this);
   }
 
+  add = (item: Item, atIndex?: number) => {
+    this.hotbar.add(item, atIndex);
+    this.toast.add(item);
+  };
+
+  select = (index: number) => {
+    this.hotbar.select(index);
+  };
+
+  popup = (item: Item) => this.toast.add(item);
+
+  cascade = (on: boolean) => this.hotbar.cascade(on);
+
+  subtleFade = (on: boolean) => this.hotbar.fade(on);
+
   onResize = () => {
-    if (window.innerWidth < 1200) {
-      this.styleElementRef.setAttribute('href', this.smallerStyleSheet);
-    } else {
-      this.styleElementRef.setAttribute('href', this.defaultStyleSheet);
+    const isNowFullWidth = window.innerWidth > 1200;
+
+    if (this.fullWidth !== undefined && this.fullWidth == isNowFullWidth) {
+      return;
     }
-  };
 
-  bindButtons = () => {
-    let bananaBtn = document.getElementById('addDemoBananaButton');
-    bananaBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Banana(1)),
-    );
+    this.fullWidth = isNowFullWidth;
 
-    let carrotBtn = document.getElementById('addDemoCarrotButton');
-    carrotBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Carrot(3)),
-    );
+    if (this.fullWidth) {
+      this.hotbarStyleRef.setAttribute('href', this.defaultStyleSheet);
+    } else {
+      this.hotbarStyleRef.setAttribute('href', this.smallerStyleSheet);
+    }
 
-    let pearBtn = document.getElementById('addDemoPearButton');
-    pearBtn.addEventListener('click', (e: Event) =>
-      this.toastService.add(new Pear(1)),
-    );
-
-    let cascadeOnBtn = document.getElementById('cascadeOnButton');
-    cascadeOnBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.cascade(true),
-    );
-
-    let cascadeOffBtn = document.getElementById('cascadeOffButton');
-    cascadeOffBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.cascade(false),
-    );
-
-    let fadeOnbtn = document.getElementById('subtleFadeOnButton');
-    fadeOnbtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.fade(true),
-    );
-
-    let fadeOffbtn = document.getElementById('subtleFadeOffButton');
-    fadeOffbtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.fade(false),
-    );
-
-    let appleBtn = document.getElementById('addAppleButton');
-    appleBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.add(new Apple(1), 1),
-    );
-
-    let breadBtn = document.getElementById('addBreadButton');
-    breadBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.add(new Bread(1), 0),
-    );
-
-    let orangeBtn = document.getElementById('addOrangeButton');
-    orangeBtn.addEventListener('click', (e: Event) =>
-      this.hotbarService.add(new Orange(1), 5),
-    );
-
-    let selectOne = document.getElementById('selectOne');
-    selectOne.addEventListener('click', (e: Event) =>
-      this.hotbarService.select(0),
-    );
-
-    let selectSeven = document.getElementById('selectSeven');
-    selectSeven.addEventListener('click', (e: Event) =>
-      this.hotbarService.select(6),
-    );
-  };
-
-  bindResizeListener = () => {
-    window.addEventListener('resize', (e: Event) => {
-      this.onResize();
-      this.hotbarService.resize();
-    });
-    this.onResize();
-    this.hotbarService.resize();
+    this.hotbar.resize();
   };
 }
 

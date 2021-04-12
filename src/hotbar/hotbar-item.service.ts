@@ -1,19 +1,18 @@
-import { AbstractItem as Item } from '../model/item';
-import '../util/util';
+import { AbstractItem as Item } from '../model/items/abstract-item';
+import '../util/transformation';
 
 export class HotbarItemService {
   private readonly hotbarSlots: HTMLElement[];
   private readonly hotbarContents: Item[];
 
+  private readonly animationMap: Map<HTMLElement, number>;
+
   private readonly interval: number;
-
-  private currentIcon: HTMLElement;
-
-  private readonly intervalMap = new Map<string, number>();
-  private currentScale = 1;
 
   constructor() {
     this.interval = 500;
+
+    this.animationMap = new Map<HTMLElement, number>();
 
     this.hotbarSlots = [].slice.call(
       document.getElementsByClassName('hotbar-item'),
@@ -42,29 +41,48 @@ export class HotbarItemService {
     }
   }
 
+  itemPresent(element?: HTMLElement, atIndex?: number): boolean {
+    let isPresent = false;
+
+    if (atIndex !== undefined)
+      return this.hotbarContents[atIndex] !== undefined;
+    else if (element !== undefined) {
+      this.hotbarContents.forEach((item) => {
+        if (item.elementRef === element) isPresent = true;
+      });
+    }
+
+    return isPresent;
+  }
+
   private upsert = (item: Item, atIndex: number) => {
     let exsisting = this.hotbarContents[atIndex];
 
+    //Clears slot if item is present
     if (exsisting !== undefined && exsisting.id !== item.id) {
       this.clearSlot(atIndex);
       exsisting = undefined;
     }
 
+    //if nothing exists in that slot, then create an icon and populate it
     if (exsisting === undefined) {
       this.createIcon(item, atIndex);
     } else {
-      if (this.intervalMap.has(exsisting.id)) {
+      //if an animation is running on this icon then queue this
+      if (this.animationMap.has(exsisting.iconRef)) {
         this.queue(item, atIndex);
         return;
       }
 
       exsisting.amount += item.amount;
+      //run update animation
       this.updateIcon(exsisting);
       return;
     }
 
-    this.intervalMap.set(
-      item.id,
+    //starts animation
+    this.runAnimation(
+      item.iconRef,
       setTimeout(this.addToHotbar.bind(this, item, Date.now(), true), 5),
     );
   };
@@ -97,84 +115,86 @@ export class HotbarItemService {
     this.hotbarSlots[atIndex].appendChild(icon);
     this.hotbarContents[atIndex] = item;
     item.elementRef = icon;
+    item.iconRef = iconImg;
   };
 
   private updateIcon = (item: Item) => {
     let textElement = item.elementRef.getElementsByTagName('p')[0];
     textElement.innerText = item.amount.toString();
-    this.intervalMap.set(
-      item.id,
+
+    this.runAnimation(
+      item.iconRef,
       setTimeout(this.addToHotbar.bind(this, item, Date.now(), true, true), 5),
     );
   };
 
-  private addToHotbar = (
+  private addToHotbar(
     item: Item,
     startTime: number,
     initial: boolean,
     update?: boolean,
-  ) => {
-    //setting current image/icon
-    if (this.currentIcon === undefined) {
-      this.currentIcon = item.elementRef.getElementsByTagName('img')[0];
-    }
+  ) {
+    //Current icon
+    const icon = item.iconRef;
 
-    //setting target
+    //Setting target values
     const startSize = initial ? 1 : 1.25;
     const targetSize = initial ? 1.25 : 1;
 
-    //lerp scale
-    this.currentScale = window.lerp(
+    //Lerping icons scale
+    const currentScale = window.scaleElement(
+      icon,
+      targetSize,
+      startSize,
       startTime,
       this.interval,
-      startSize,
-      targetSize,
     );
-    this.currentIcon.style.scale = this.currentScale.toFixed(2);
 
-    //lerp transparency if fading in
-    if (initial && !update) {
-      const targetOpacity = window.lerp(startTime, this.interval, 0, 1);
-      this.currentIcon.style.opacity = targetOpacity.toString();
-    }
+    /*  Will lerp the elements opacity,
+        if the item is expanding after being added for the first time. */
+    if (initial && !update)
+      window.setElementOpacity(icon, 1, 0, startTime, this.interval);
 
-    //ending animation if target is met
-    if (this.currentScale.toFixed(2) === targetSize.toFixed(2)) {
-      this.currentIcon = undefined;
+    // Will end the animation if element is set to the desired size
+    if (currentScale.toFixed(2) === targetSize.toFixed(2)) {
       if (initial) {
-        this.intervalMap.set(
-          item.id,
-          setTimeout(
-            this.addToHotbar.bind(this, item, Date.now(), false, update),
-            5,
-          ),
-        );
+        //Will set the start time and initial bool ready to shrink the element
+        startTime = Date.now();
+        initial = false;
       } else {
-        this.intervalMap.delete(item.id);
+        //Otherwise ending the sequence
+        this.animationMap.delete(icon);
+        return;
       }
-      return;
     }
 
-    //running again if not
-    this.intervalMap.set(
-      item.id,
+    //Running again if not complete
+    this.runAnimation(
+      icon,
       setTimeout(
         this.addToHotbar.bind(this, item, startTime, initial, update),
         5,
       ),
     );
-  };
+  }
+
+  private runAnimation(element: HTMLElement, id: number) {
+    this.stopAnimation(element);
+    this.animationMap.set(element, id);
+  }
+
+  private stopAnimation(element: HTMLElement) {
+    if (this.animationMap.has(element))
+      clearTimeout(this.animationMap.get(element));
+  }
 
   private queue(item: Item, atIndex: number) {
     setTimeout(this.canPop.bind(this, item, atIndex), 5);
   }
 
   private canPop(item: Item, atIndex: number) {
-    if (this.intervalMap.has(item.id)) {
-      this.intervalMap.set(
-        item.id,
-        setTimeout(this.queue.bind(this, item, atIndex), 5),
-      );
+    if (this.animationMap.has(item.elementRef)) {
+      setTimeout(this.queue.bind(this, item, atIndex), 5);
     } else {
       this.upsert(item, atIndex);
     }
