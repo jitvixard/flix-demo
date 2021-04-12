@@ -22,14 +22,20 @@ export class App {
     bindResizeListener(this);
   }
 
-  add(item: Item) {
-    this.hotbar.add(item);
+  add = (item: Item, atIndex?: number) => {
+    this.hotbar.add(item, atIndex);
     this.toast.add(item);
-  }
+  };
 
-  select(index: number) {
+  select = (index: number) => {
     this.hotbar.select(index);
-  }
+  };
+
+  popup = (item: Item) => this.toast.add(item);
+
+  cascade = (on: boolean) => this.hotbar.cascade(on);
+
+  subtleFade = (on: boolean) => this.hotbar.fade(on);
 
   onResize = () => {
     const isNowFullWidth = window.innerWidth > 1200;

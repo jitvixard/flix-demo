@@ -64,10 +64,9 @@ export class Hotbar {
   }
 
   resize() {
-    console.log('resizing');
     let fullWidthOnResize = window.innerWidth >= 1200;
+    //if the width has changed between full and reduced
     if (this.fullWidth != fullWidthOnResize) {
-      //has changed?
       let cascadeOrder = this.getHotbarElements(fullWidthOnResize);
 
       this.cascadeService.updateWidth(fullWidthOnResize, cascadeOrder);
