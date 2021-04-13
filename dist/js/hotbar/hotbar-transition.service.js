@@ -3,34 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HotbarTransitionService = void 0;
 var HotbarTransitionService = /** @class */ (function () {
     function HotbarTransitionService(elementsInOrder, animationLength, fullWidthDistance, reducedWidthDistance, axis) {
-        var _this = this;
         this.elementsInOrder = elementsInOrder;
         this.animationLength = animationLength;
         this.fullWidthDistance = fullWidthDistance;
         this.reducedWidthDistance = reducedWidthDistance;
         this.axis = axis;
-        this.setForElements = function (translate, opacity, elements) {
-            elements.forEach(function (element) {
-                _this.setTranslate(element, translate);
-                element.style.opacity = opacity.toString();
-            });
-            _this.current = translate;
-        };
-        this.setTranslate = function (element, value) {
-            return (element.style.transform = 'translate' + _this.axis + '(' + value + '%)');
-        };
         this.onPosition = true;
-        this.target = 0;
+        this.targetPosition = 0;
         this.offPosition = 0;
+        this.startingPosition = 0;
         this.hotbar = document.getElementById('hotbar');
     }
     HotbarTransitionService.prototype.on = function () {
-        this.prepForeOn();
-        this.currentRoutine = setInterval(this.animate.bind(this, this.currentIndex, Date.now()), 5);
+        this.prepare(true);
+        this.currentRoutine = setTimeout(this.animate.bind(this, this.currentIndex, Date.now()), 5);
     };
     HotbarTransitionService.prototype.off = function () {
-        this.prepForOff();
-        this.currentRoutine = setInterval(this.animate.bind(this, this.currentIndex, Date.now()), 5);
+        this.prepare(false);
+        this.currentRoutine = setTimeout(this.animate.bind(this, this.currentIndex, Date.now()), 5);
     };
     HotbarTransitionService.prototype.updateWidth = function (fullWidth, newOrder) {
         var _this = this;
@@ -39,54 +29,41 @@ var HotbarTransitionService = /** @class */ (function () {
         this.offPosition = fullWidth
             ? this.fullWidthDistance
             : this.reducedWidthDistance;
-        this.current = this.onPosition ? 0 : this.offPosition;
-        if (fullWidth && this.current <= this.fullWidthDistance) {
-            var diff = this.reducedWidthDistance - this.fullWidthDistance;
-            this.currentOfRow = this.current + diff;
+        this.startingPosition = this.onPosition ? 0 : this.offPosition;
+        if (fullWidth && this.startingPosition <= this.fullWidthDistance) {
             this.elementsInOrder.forEach(function (eArr) {
-                eArr.forEach(function (element) { return _this.setTranslate(element, _this.current); });
+                eArr.forEach(function (element) {
+                    return window.setElementTransform(element, _this.axis, _this.startingPosition);
+                });
             });
         }
     };
     HotbarTransitionService.prototype.animate = function (index, startTime) {
-        var opacity = this.getOpacity(startTime, this.animationLength);
-        if (this.current === this.target) {
+        var _this = this;
+        clearTimeout(this.currentRoutine);
+        var targetOpacity = this.onPosition ? 1 : 0;
+        var startingOpactiy = Math.abs(targetOpacity - 1);
+        var elementsToTransform = this.axis === 'Y' ? this.elementsInOrder[index] : [this.hotbar];
+        var currentTransform;
+        //setting the transform and opacity for each element
+        elementsToTransform.forEach(function (element) {
+            currentTransform = window.setElementTransform(element, _this.axis, _this.targetPosition, _this.startingPosition, startTime, _this.animationLength);
+            window.setElementOpacity(element, targetOpacity, startingOpactiy, startTime, _this.animationLength);
+        });
+        if (currentTransform.toFixed(2) === this.targetPosition.toFixed(2)) {
             //end if at target
-            clearInterval(this.currentRoutine);
+            console.log('stopping animation');
             this.currentRoutine = setTimeout(this.moveOnToNextColumn.bind(this, index), this.animationLength);
-            if (this.axis === 'Y') {
-                this.setForElements(this.target, opacity, this.elementsInOrder[index]);
-            }
-            else if (this.axis === 'X') {
-                this.setForElements(this.target, opacity, [this.hotbar]);
-            }
             return;
         }
-        var translateToSet = this.lerpBetweenCurrentAndTarget(startTime, this.animationLength);
-        translateToSet = this.onPosition
-            ? this.offPosition - translateToSet
-            : translateToSet;
-        if (this.axis === 'Y') {
-            this.setForElements(translateToSet, opacity, this.elementsInOrder[index]);
-        }
-        else if (this.axis === 'X') {
-            this.setForElements(translateToSet, opacity, [this.hotbar]);
-        }
-        this.current = translateToSet;
+        console.log(this.elementsInOrder[index][0].style.opacity);
+        this.currentRoutine = setTimeout(this.animate.bind(this, index, startTime), 5);
     };
-    HotbarTransitionService.prototype.prepForeOn = function () {
-        this.onPosition = true;
-        this.currentIndex = 0;
-        this.target = 0;
-        this.current = this.offPosition;
-        this.currentOfRow = this.offPosition;
-    };
-    HotbarTransitionService.prototype.prepForOff = function () {
-        this.onPosition = false;
-        this.currentIndex = this.elementsInOrder.length - 1;
-        this.target = this.offPosition;
-        this.currentOfRow = 0;
-        this.current = 0;
+    HotbarTransitionService.prototype.prepare = function (on) {
+        this.onPosition = on;
+        this.currentIndex = on ? 0 : this.elementsInOrder.length - 1;
+        this.targetPosition = on ? 0 : this.offPosition;
+        this.startingPosition = on ? this.offPosition : 0;
     };
     HotbarTransitionService.prototype.moveOnToNextColumn = function (completedIndex) {
         clearTimeout(this.currentRoutine);
@@ -95,20 +72,7 @@ var HotbarTransitionService = /** @class */ (function () {
             completedIndex === this.elementsInOrder.length) {
             return;
         }
-        this.current = this.currentOfRow;
         this.currentRoutine = setInterval(this.animate.bind(this, completedIndex, Date.now()), 5);
-    };
-    HotbarTransitionService.prototype.lerpBetweenCurrentAndTarget = function (startTime, interval) {
-        var transformDistance = Math.abs(this.currentOfRow) + Math.abs(this.target);
-        var fraction = transformDistance / interval;
-        var deltaTime = Date.now() - startTime;
-        deltaTime = deltaTime > interval ? interval : deltaTime;
-        return Math.round(deltaTime * fraction);
-    };
-    HotbarTransitionService.prototype.getOpacity = function (startTime, interval) {
-        var opac = (Date.now() - startTime) / interval;
-        opac = opac > 1 ? 1 : opac;
-        return this.onPosition ? opac : 1 - opac;
     };
     return HotbarTransitionService;
 }());
