@@ -12,6 +12,7 @@ export abstract class AbstractItem {
 
   public elementRef: HTMLDivElement;
   public iconRef: HTMLImageElement;
+  public popupRef: HTMLElement;
 
   public routineId: number;
 
