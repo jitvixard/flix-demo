@@ -14,7 +14,7 @@
         <div id="controlPanel">
           <div class="button-pane">
             <div class="button-pane-title">Pop-up Toast</div>
-            <div class="button-pane-buttons">
+            <div id="toast-buttons" class="button-pane-buttons">
               <input id="addDemoBananaButton" type="button" value="Add A Banana"></input>
               <input id="addDemoCarrotButton" type="button" value="Add Three Carrots"></input>
               <input id="addDemoPearButton" type="button" value="Add A Pear"></input>
@@ -22,7 +22,7 @@
           </div>
           <div class="button-pane">
             <div class="button-pane-title">Hotbar Animations</div>
-            <div class="button-pane-buttons">
+            <div id="hotbar-animation-buttons" class="button-pane-buttons">
               <input id="cascadeOnButton" type="button" value="Cascade On"></input>
               <input id="cascadeOffButton" type="button" value="Cascade Off"></input>
               <input id="subtleFadeOnButton" type="button" value="Subtle Fade On"></input>
@@ -31,9 +31,9 @@
           </div>
           <div class="button-pane">
             <div class="button-pane-title">Hotbar Interactions</div>
-            <div class="button-pane-buttons">
-              <input id="addAppleButton" type="button" value="Add Apple to Slot Two"></input>
+            <div id="hotbar-interaction-buttons" class="button-pane-buttons">
               <input id="addBreadButton" type="button" value="Add Loaf of Bread to Slot One"></input>
+              <input id="addAppleButton" type="button" value="Add Apple to Slot Two"></input>
               <input id="addOrangeButton" type="button" value="Add Orange to Slot Six"></input>
             </div>
           </div>   
@@ -64,7 +64,9 @@
             </div>
           </div>
         </div>
+
         <div id="toast-container"></div>
+
         <div id="hotbar-container">
           <div id="hotbar">
             <div class="hotbar-item" id="hotbar-item-1"></div>
@@ -79,6 +81,7 @@
             <div class="hotbar-item" id="hotbar-item-10"></div>
           </div>
         </div>
+
       </div>
     </main>
     <script src="dist/js/app.js"></script>

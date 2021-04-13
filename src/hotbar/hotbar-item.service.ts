@@ -93,6 +93,7 @@ export class HotbarItemService {
 
   private clearSlot = (index: number) => {
     let itemToRemove = this.hotbarContents[index];
+    console.log(JSON.stringify(itemToRemove));
     this.hotbarContents[index] = undefined;
     this.hotbarSlots[index].parentElement.removeChild(itemToRemove.elementRef);
   };

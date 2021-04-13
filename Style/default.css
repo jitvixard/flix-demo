@@ -6,16 +6,30 @@ body {
 
 #controlPanel {
   margin: auto;
-  width: 50%;
+  width: 35%;
 
   border: 3px solid green;
 
   padding: 1.5%;
   padding-bottom: 3.5%;
+
+  z-index: 10;
 }
 
 .button-pane-buttons {
   display: grid;
+}
+
+#toast-buttons {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#hotbar-animation-buttons {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+#hotbar-interaction-buttons {
+  grid-template-columns: repeat(1, 1fr);
 }
 
 .button-pane-title {
@@ -115,7 +129,7 @@ body {
   display: flex;
   flex-direction: column-reverse;
 
-  z-index: -1;
+  z-index: 1;
 }
 
 .popup-toast {
@@ -126,6 +140,8 @@ body {
 
   margin-bottom: 40px;
   padding: 0;
+
+  z-index: 5;
 
   background-image: url('../Assets/popup/toast.png');
   background-size: cover;
