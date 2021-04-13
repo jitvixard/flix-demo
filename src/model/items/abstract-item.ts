@@ -1,10 +1,3 @@
-import { Apple } from './impl/apple';
-import { Banana } from './impl/banana';
-import { Bread } from './impl/bread';
-import { Carrot } from './impl/carrot';
-import { Orange } from './impl/orange';
-import { Pear } from './impl/pear';
-
 export abstract class AbstractItem {
   public readonly id: string;
   public readonly displayName: string;
@@ -20,5 +13,5 @@ export abstract class AbstractItem {
     this.amount = amount;
   }
 
-  getPath = (): string => '../Assets/icons/' + this.id + '.png';
+  getPath = (): string => 'dist/assets/icons/' + this.id + '.png';
 }
