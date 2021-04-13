@@ -1,38 +1,76 @@
-class App {
+import { AbstractItem as Item } from './model/items/abstract-item';
+import { Hotbar } from './hotbar/hotbar';
+import { Toast } from './pop-up/toast';
+import { bindButtons, bindResizeListener } from './util/bindings';
 
+export class App {
+  hotbarStyleRef: HTMLElement;
+  defaultStyleSheet = 'style/fullwidth.css';
+  smallerStyleSheet = 'style/reducedwidth.css';
 
-    styleElementRef : HTMLElement;
-    defaultStyleSheet = "Style/fullwidth.css";
-    smallerStyleSheet = "Style/reducedwidth.css"
+  private hotbar = new Hotbar();
+  private toast = new Toast();
 
-    constructor() {
-        this.styleElementRef = document.getElementById("hotbarStyle");
+  alternateStyleActivated: boolean;
+  fullWidth: boolean;
 
-        window.addEventListener("resize", (e: Event) => this.onResize());               //resizing event
+  constructor() {
+    // *** references *** //
+    this.hotbarStyleRef = document.getElementById('hotbarStyle');
 
-        let btn = document.getElementById("addItemButton");                             //adding event to button
-        btn.addEventListener("click", (e: Event) => this.addItem());
+    this.alternateStyleActivated = false;
 
-        this.onResize();
+    // *** bindings *** //
+    bindButtons(this);
+    bindResizeListener(this);
+  }
+
+  add = (item: Item, atIndex?: number) => {
+    this.hotbar.add(item, atIndex);
+    this.toast.add(item);
+  };
+
+  select = (index: number) => {
+    this.hotbar.select(index);
+  };
+
+  popup = (item: Item) => this.toast.add(item);
+
+  cascade = (on: boolean) => this.hotbar.cascade(on);
+
+  subtleFade = (on: boolean) => this.hotbar.fade(on);
+
+  onResize = () => {
+    const isNowFullWidth = window.innerWidth > 1200;
+
+    if (this.fullWidth !== undefined && this.fullWidth == isNowFullWidth) {
+      return;
     }
 
-    addItem() {
+    this.fullWidth = isNowFullWidth;
 
+    if (this.fullWidth) {
+      this.hotbarStyleRef.setAttribute('href', this.defaultStyleSheet);
+    } else {
+      this.hotbarStyleRef.setAttribute('href', this.smallerStyleSheet);
     }
 
-    onResize() {
-        const styleId = "hotbarStyle";
+    this.hotbar.resize();
+  };
 
-        if (window.innerWidth < 1200) {
-            document.getElementById(styleId).setAttribute("href", this.smallerStyleSheet);
-        }
-        else {
-            document.getElementById(styleId).setAttribute("href", this.defaultStyleSheet);
-        }
-    }
+  alternateStyle = (button: HTMLElement) => {
+    let styleRef = document.getElementById('alternateStyle');
+    if (this.alternateStyleActivated) styleRef.setAttribute('href', '');
+    else styleRef.setAttribute('href', 'style/alternate.css');
 
+    this.alternateStyleActivated = !this.alternateStyleActivated;
 
-    //TODO Add Methods for button handling
+    const textToSet = this.alternateStyleActivated
+      ? 'Revert Style'
+      : 'Adjust Style';
+
+    button.setAttribute('value', textToSet);
+  };
 }
 
 new App();
