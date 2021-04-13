@@ -59,7 +59,6 @@ var HotbarService = /** @class */ (function () {
             this.hotbarCascadeOrder = fullWidthOnResize
                 ? this.fullWidthOrder()
                 : this.reducedWidthOrder();
-            //TODO reset cascade animation
         }
         this.fullWidth = fullWidthOnResize;
     };
