@@ -1,3 +1,7 @@
+#item-buttons {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 #selection-buttons {
   grid-template-columns: repeat(5, 1fr);
 }

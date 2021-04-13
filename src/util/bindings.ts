@@ -74,6 +74,14 @@ export function bindButtons(app: App): void {
         );
     },
   );
+
+  /*
+   * Style Alternation
+   */
+  let styleBtn = document.getElementById('restyle');
+  styleBtn.addEventListener('click', (e: Event) =>
+    app.alternateStyle(styleBtn),
+  );
 }
 
 /**

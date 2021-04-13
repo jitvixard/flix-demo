@@ -23,22 +23,26 @@ export class HotbarItemService {
 
   add(item: Item, atIndex?: number) {
     let index = 0;
-    let unplaced = true;
-    let currentRef: Item;
 
-    while (index < this.hotbarContents.length) {
-      currentRef = this.hotbarContents[index];
+    let firstAvailableIndex: number;
+    let exsistingIndex: number;
 
-      if (
-        ((atIndex !== undefined && atIndex === index) ||
-          (atIndex === undefined && currentRef === undefined)) &&
-        unplaced
-      ) {
-        this.upsert(item, index);
-        unplaced = false;
+    if (atIndex === undefined) {
+      while (index < this.hotbarContents.length) {
+        let currentItem = this.hotbarContents[index];
+        if (currentItem === undefined && firstAvailableIndex === undefined)
+          firstAvailableIndex = index;
+        else if (currentItem !== undefined && currentItem.id === item.id)
+          exsistingIndex = index;
+
+        index++;
       }
-      index++;
+
+      if (exsistingIndex !== undefined) atIndex = exsistingIndex;
+      else if (firstAvailableIndex !== undefined) atIndex = firstAvailableIndex;
     }
+
+    if (atIndex !== undefined) this.upsert(item, atIndex);
   }
 
   itemPresent(element?: HTMLElement, atIndex?: number): boolean {
@@ -89,6 +93,7 @@ export class HotbarItemService {
 
   private clearSlot = (index: number) => {
     let itemToRemove = this.hotbarContents[index];
+    console.log(JSON.stringify(itemToRemove));
     this.hotbarContents[index] = undefined;
     this.hotbarSlots[index].parentElement.removeChild(itemToRemove.elementRef);
   };

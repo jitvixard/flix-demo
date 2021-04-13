@@ -17,21 +17,18 @@ export class HotbarSelectionService {
   selectElement(element: HTMLElement) {
     //if this is not a hotbar item stop
     if (element.className !== 'hotbar-item') return;
-    //if this item is already selected stop
-    if (element === this.currentlySelected) return;
 
     //deselect previous item
-    if (
-      this.currentlySelected !== undefined &&
-      this.currentlySelected !== element
-    ) {
+    if (this.currentlySelected !== undefined) {
       this.deselect();
     }
+
+    if (this.currentlySelected === element) return;
 
     let selectionElement = this.createSelectionElement();
     element.appendChild(selectionElement);
 
-    this.currentlySelected = selectionElement.parentElement;
+    this.currentlySelected = element;
     let iconElement = this.currentlySelected.getElementsByTagName('img')[0];
 
     this.addAnimation(
@@ -109,8 +106,6 @@ export class HotbarSelectionService {
 
     if (startingOpacity === undefined) startingOpacity = selecting ? 0 : 1;
     if (startingScale === undefined) startingScale = selecting ? 1 : 1.25;
-
-    selecting ? this.animationLength : this.animationLength / 2;
 
     let currentOpacity: number;
     if (highlightElement !== undefined) {
