@@ -11,11 +11,14 @@ export class App {
   private hotbar = new Hotbar();
   private toast = new Toast();
 
+  alternateStyleActivated: boolean;
   fullWidth: boolean;
 
   constructor() {
     // *** references *** //
     this.hotbarStyleRef = document.getElementById('hotbarStyle');
+
+    this.alternateStyleActivated = false;
 
     // *** bindings *** //
     bindButtons(this);
@@ -53,6 +56,20 @@ export class App {
     }
 
     this.hotbar.resize();
+  };
+
+  alternateStyle = (button: HTMLElement) => {
+    let styleRef = document.getElementById('alternateStyle');
+    if (this.alternateStyleActivated) styleRef.setAttribute('href', '');
+    else styleRef.setAttribute('href', 'Style/alternate.css');
+
+    this.alternateStyleActivated = !this.alternateStyleActivated;
+
+    const textToSet = this.alternateStyleActivated
+      ? 'Revert Style'
+      : 'Adjust Style';
+
+    button.setAttribute('value', textToSet);
   };
 }
 
