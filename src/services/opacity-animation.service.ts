@@ -4,18 +4,18 @@ import { AbstractAnimationService } from './abstract-animation.service';
 export class OpacityAnimationService extends AbstractAnimationService {
   setElementOpacity(
     elements: HTMLElement[],
-    startScale: number,
-    targetScale: number,
+    startOpacity: number,
+    targetOpacity: number,
     interval: number,
   ): BehaviorSubject<boolean> {
     if (elements.length === 0) return undefined;
 
-    let currentScale = window.getElementScale(elements[0]);
+    let currentOpacity = window.getElementOpacity(elements[0]);
 
     interval = this.getAdjustedInterval(
-      startScale,
-      currentScale,
-      targetScale,
+      startOpacity,
+      currentOpacity,
+      targetOpacity,
       interval,
     );
 
@@ -23,7 +23,7 @@ export class OpacityAnimationService extends AbstractAnimationService {
       this.opacityAnimation.bind(
         this,
         elements,
-        [currentScale, targetScale],
+        [currentOpacity, targetOpacity],
         [Date.now(), interval],
       ),
       5,
