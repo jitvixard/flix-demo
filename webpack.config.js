@@ -22,7 +22,9 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "Assets", to: "dist/assets" },
+        { from: "assets", to: "dist/assets" },
+        { from: "style", to: "dist/style"},
+        { from: "Main.html", to: "dist/"}
       ],
       options: {
         concurrency: 100,

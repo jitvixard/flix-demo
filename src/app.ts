@@ -5,8 +5,8 @@ import { bindButtons, bindResizeListener } from './util/bindings';
 
 export class App {
   hotbarStyleRef: HTMLElement;
-  defaultStyleSheet = 'Style/fullwidth.css';
-  smallerStyleSheet = 'Style/reducedwidth.css';
+  defaultStyleSheet = 'style/fullwidth.css';
+  smallerStyleSheet = 'style/reducedwidth.css';
 
   private hotbar = new Hotbar();
   private toast = new Toast();
@@ -61,7 +61,7 @@ export class App {
   alternateStyle = (button: HTMLElement) => {
     let styleRef = document.getElementById('alternateStyle');
     if (this.alternateStyleActivated) styleRef.setAttribute('href', '');
-    else styleRef.setAttribute('href', 'Style/alternate.css');
+    else styleRef.setAttribute('href', 'style/alternate.css');
 
     this.alternateStyleActivated = !this.alternateStyleActivated;
 

@@ -13,5 +13,5 @@ export abstract class AbstractItem {
     this.amount = amount;
   }
 
-  getPath = (): string => 'dist/assets/icons/' + this.id + '.png';
+  getPath = (): string => 'assets/icons/' + this.id + '.png';
 }
