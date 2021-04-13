@@ -1,4 +1,8 @@
 {
+  "name": "coherent-ui-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/app.js",
   "devDependencies": {
     "prettier": "2.2.1",
     "ts-loader": "^8.1.0",
