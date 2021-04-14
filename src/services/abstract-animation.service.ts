@@ -22,11 +22,11 @@ export class AbstractAnimationService {
     return (interval / fullValue) * actualValue;
   };
 
-  protected getObservableFromMap = (
+  protected getObservableFromMap(
     elements: HTMLElement[],
     storageMap: Map<HTMLElement[], [BehaviorSubject<boolean>, number]>,
-  ): BehaviorSubject<boolean> => {
+  ): BehaviorSubject<boolean> {
     if (storageMap.has(elements)) return storageMap.get(elements)[0];
     else return undefined;
-  };
+  }
 }
