@@ -3,6 +3,30 @@
 Before reading/inspecting please note. The draft you see is what I consider incredibly rough. I worked in several key classes/services to break down the task at hand into smaller chunks. I then wanted to come back code using `RXJS` to introduce a more event driven structure. Due to a busy few weeks I've not had the time to implement it the way I'd have liked to. But please read the section ***A Better Approach*** for more details.
 
 
+## Running the Application & Interaction
+### Running the Application (Advised)
+- Download the Source code onto your local machine by either cloning this repository or downloading a Zip file.
+- Once downloaded, the application can be run by opening the `dist/` directory and opening `Main.html` in your preferred browser.
+
+### Running the Application in Development
+- Install `npm`
+- Install `webpack` 
+- Install `copy-webpack-plugin`
+- Install `rxjs`
+- Navigate to the root directory and run `npm start`
+
+### Functionality
+- The application can be controlled from the debug panel found in the top right hand side of the page. 
+- All functional deliverables can be assertained through this panel. 
+  - Debug buttons to play hotbar animations can be found under ***Hotbar Animations*** 
+  - Debug buttons to add items to the hotbar at specified positions can be found under ***Hotbar Interactions*** 
+  - Debug buttons to trigger pop-ups, that do not add items to the hotbar can be found under ***Pop-up Toast***
+  - In regards to selecting given slots, I took the liberty of expanding on the brief ever so slightly. Under ***Hotbar Selection*** is a collection debug buttons that will allow for the simulation of any given hotbar element.
+  - In addition to that I've provided buttons that will add any item to the hotbar and the inventory resulting in the item appearing on the hotbar as well as a pop-up toast notification. These can be found under ***Item Addition***
+  - I took the liberty of adding an extra feature. I found the pop-up toast to be slightly incovenient. This was in part due to my leaving the UI oversized (inentionally) as a way to better use the space. By clicking the button marked ***Adjust Style*** the css relating to pop-ups will change. Pressing it again will revert this. This could be a potential alternative for the UI.
+- Reducing the width of the application will result in the hotbar elements stacking, as requested.
+- All visual elements have been laid out in accordance with the spec. With the addition of an alternative toast location being provided for demonstration purposes.
+
 
 ## On Development
 ### Technology Used
@@ -54,31 +78,6 @@ Contains stylesheets used.
 
 #### src -> util
 I created several utility functions to handle things such as translating elements, opacity fades, parsing style values into numbers, etc. Some of these were exported, others that found frequent use accross the project were bound to the `window` property of the app. This allowed for global access without needing to constantly re-import elements.
-
-
-## Running the Application & Interaction
-### Running the Application (Advised)
-- Download the Source code onto your local machine by either cloning this repository or downloading a Zip file.
-- Once downloaded, the application can be run by opening the `dist/` directory and opening `Main.html` in your preferred browser.
-
-### Running the Application in Development
-- Install `npm`
-- Install `webpack` 
-- Install `copy-webpack-plugin`
-- Install `rxjs`
-- Navigate to the root directory and run `npm start`
-
-### Functionality
-- The application can be controlled from the debug panel found in the top right hand side of the page. 
-- All functional deliverables can be assertained through this panel. 
-  - Debug buttons to play hotbar animations can be found under ***Hotbar Animations*** 
-  - Debug buttons to add items to the hotbar at specified positions can be found under ***Hotbar Interactions*** 
-  - Debug buttons to trigger pop-ups, that do not add items to the hotbar can be found under ***Pop-up Toast***
-  - In regards to selecting given slots, I took the liberty of expanding on the brief ever so slightly. Under ***Hotbar Selection*** is a collection debug buttons that will allow for the simulation of any given hotbar element.
-  - In addition to that I've provided buttons that will add any item to the hotbar and the inventory resulting in the item appearing on the hotbar as well as a pop-up toast notification. These can be found under ***Item Addition***
-  - I took the liberty of adding an extra feature. I found the pop-up toast to be slightly incovenient. This was in part due to my leaving the UI oversized (inentionally) as a way to better use the space. By clicking the button marked ***Adjust Style*** the css relating to pop-ups will change. Pressing it again will revert this. This could be a potential alternative for the UI.
-- Reducing the width of the application will result in the hotbar elements stacking, as requested.
-- All visual elements have been laid out in accordance with the spec. With the addition of an alternative toast location being provided for demonstration purposes.
 
 
 ## A Better Approach
