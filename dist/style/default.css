@@ -88,8 +88,8 @@ body {
   max-width: 100%;
 
   z-index: -1;
-  position: relative;
-  transform: translateY(-100%);
+  position: absolute;
+  bottom: 0;
 
   background-image: url('../Assets/hotbar/hotbar-item.png');
   background-size: cover;

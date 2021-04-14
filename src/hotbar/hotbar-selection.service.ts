@@ -15,21 +15,23 @@ export class HotbarSelectionService {
   }
 
   selectElement(element: HTMLElement) {
-    //if this is not a hotbar item stop
-    if (element.className !== 'hotbar-item') return;
-
     //deselect previous item
     if (this.currentlySelected !== undefined) {
       this.deselect();
     }
 
-    if (this.currentlySelected === element) return;
+    let selectionElement: HTMLElement;
+    let iconElement: HTMLImageElement;
 
-    let selectionElement = this.createSelectionElement();
+    if (element !== undefined)
+    {
+      if (this.currentlySelected === element) return;
+      this.currentlySelected = element;
+      iconElement = this.currentlySelected.getElementsByTagName('img')[0];
+    }
+
+    selectionElement = this.createSelectionElement();
     element.appendChild(selectionElement);
-
-    this.currentlySelected = element;
-    let iconElement = this.currentlySelected.getElementsByTagName('img')[0];
 
     this.addAnimation(
       this.currentlySelected,
