@@ -1,4 +1,4 @@
-export function cssValueIsEqual(
+export function valueIsEqual(
   valueA: number | string,
   valueB: number | string,
 ): boolean {
