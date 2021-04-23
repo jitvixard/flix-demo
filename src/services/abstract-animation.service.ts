@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs';
 import { calculateUpdatedDuration } from '../util/utility';
+import { lerp } from '../util/transformation';
 
 export abstract class AbstractAnimationService {
   complete$ = new Subject<boolean>();
@@ -23,7 +24,7 @@ export abstract class AbstractAnimationService {
     this.start();
   }
 
-  protected abstract setElementValue(): number;
+  protected abstract setElementValue(value: number): number;
   protected abstract getElementValue(): number;
 
   protected start(): void {
@@ -46,7 +47,9 @@ export abstract class AbstractAnimationService {
   }
 
   protected update(): void {
-    this.currentValue = this.setElementValue();
+    this.currentValue = this.setElementValue(
+      lerp(this.startTime, this.duration, this.startValue, this.targetValue),
+    );
 
     if (this.currentValue.toFixed(2) === this.targetValue.toFixed(2)) {
       this.end();

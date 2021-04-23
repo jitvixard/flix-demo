@@ -8,7 +8,7 @@
  *
  * Function assigned to the `window` to allow for global interpolation
  */
-function lerp(
+export function lerp(
   startTime: number,
   interval: number,
   startValue: number,
