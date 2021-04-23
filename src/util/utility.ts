@@ -14,3 +14,14 @@ export function valueIsEqual(
 
   return numA.toFixed(2) === numB.toFixed(2);
 }
+
+export function calculateUpdatedDuration(
+  idealStartPosition: number,
+  currentPosition: number,
+  targetPosition: number,
+  interval: number,
+) {
+  let fullValue = Math.abs(targetPosition - idealStartPosition);
+  let actualValue = Math.abs(targetPosition - currentPosition);
+  return (interval / fullValue) * actualValue;
+}
