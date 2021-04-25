@@ -15,21 +15,20 @@ export abstract class AbstractAnimationService {
 
   constructor(
     protected elements: HTMLElement[],
-    protected startValue: number,
-    protected targetValue: number,
-    protected duration: number,
+    private startValue: number,
+    private targetValue: number,
+    private duration: number,
     adjustDuration?: boolean,
   ) {
     if (adjustDuration) this.adjustDuration = adjustDuration;
-    this.start();
   }
 
-  protected abstract setElementValue(value: number): number;
-  protected abstract getElementValue(): number;
+  protected abstract updateElementValues(): void;
+  abstract getCurrentValue(): number;
 
-  protected start(): void {
+  start(): Subject<boolean> {
     this.startTime = Date.now();
-    this.currentValue = this.getElementValue();
+    this.currentValue = this.getCurrentValue();
 
     if (this.adjustDuration) {
       this.duration = calculateUpdatedDuration(
@@ -44,15 +43,28 @@ export abstract class AbstractAnimationService {
       this.update.bind(this),
       this.timeoutDelay,
     );
+
+    return this.complete$;
+  }
+
+  complete(): void {
+    this.currentValue = this.targetValue;
+    this.updateElementValues();
+    this.end();
   }
 
   protected update(): void {
-    this.currentValue = this.setElementValue(
-      lerp(this.startTime, this.duration, this.startValue, this.targetValue),
+    this.currentValue = lerp(
+      this.startTime,
+      this.duration,
+      this.startValue,
+      this.targetValue,
     );
 
+    this.updateElementValues();
+
     if (this.currentValue.toFixed(2) === this.targetValue.toFixed(2)) {
-      this.end();
+      this.complete();
       return;
     }
 
@@ -62,7 +74,7 @@ export abstract class AbstractAnimationService {
     );
   }
 
-  protected end(): void {
+  protected end = (): void => {
     this.complete$.next(true);
-  }
+  };
 }
