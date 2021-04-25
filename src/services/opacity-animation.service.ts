@@ -1,4 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
+import { getElementOpacity } from '../util/utility';
 
 export class OpacityAnimationService extends AbstractAnimationService {
   protected updateElementValues(): void {
@@ -7,9 +8,9 @@ export class OpacityAnimationService extends AbstractAnimationService {
     });
   }
 
-  protected getCurrentValue(): number {
-    return this.elements[0] !== undefined
-      ? parseFloat(this.elements[0].style.opacity)
-      : undefined;
+  getCurrentValue(): number {
+    let element = this.elements[0];
+    if (element === undefined) return undefined;
+    return getElementOpacity(element);
   }
 }

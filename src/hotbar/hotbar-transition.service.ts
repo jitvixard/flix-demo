@@ -25,22 +25,6 @@ export class HotbarTransitionService {
     this.hotbar = document.getElementById('hotbar');
   }
 
-  on() {
-    this.prepare(true);
-    this.currentRoutine = setTimeout(
-      this.animate.bind(this, this.currentIndex, Date.now()),
-      5,
-    );
-  }
-
-  off() {
-    this.prepare(false);
-    this.currentRoutine = setTimeout(
-      this.animate.bind(this, this.currentIndex, Date.now()),
-      5,
-    );
-  }
-
   updateWidth(fullWidth: boolean, newOrder: HTMLElement[][]) {
     if (newOrder !== undefined) this.elementsInOrder = newOrder;
 

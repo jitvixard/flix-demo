@@ -25,3 +25,18 @@ export function calculateUpdatedDuration(
   let actualValue = Math.abs(targetPosition - currentPosition);
   return (interval / fullValue) * actualValue;
 }
+
+export function getElementOpacity(element: HTMLElement): number {
+  return parseFloat(element.style.opacity);
+}
+
+export function getElementScale(element: HTMLElement): number {
+  return parseFloat(element.style.scale);
+}
+
+export function getElementTranslation(element: HTMLElement): number {
+  let exp = new RegExp('d+[.]d+');
+  return parseFloat(exp.exec(element.style.transform)[0]);
+}
+
+export function isScreenFullWidth(): boolean {}

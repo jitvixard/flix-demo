@@ -1,4 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
+import { getElementTranslation } from '../util/utility';
 
 export class TranslationAnimationService extends AbstractAnimationService {
   constructor(
@@ -23,11 +24,9 @@ export class TranslationAnimationService extends AbstractAnimationService {
     });
   }
 
-  protected getCurrentValue(): number {
+  getCurrentValue(): number {
     const element = this.elements[0];
     if (element === undefined) return undefined;
-
-    let exp = new RegExp('d+[.]d+');
-    return parseFloat(exp.exec(element.style.transform)[0]);
+    return getElementTranslation(element);
   }
 }

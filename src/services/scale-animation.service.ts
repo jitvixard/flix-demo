@@ -1,4 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
+import { getElementScale } from '../util/utility';
 
 export class ScaleAnimationService extends AbstractAnimationService {
   protected updateElementValues(): void {
@@ -7,9 +8,9 @@ export class ScaleAnimationService extends AbstractAnimationService {
     });
   }
 
-  protected getCurrentValue(): number {
-    return this.elements[0] !== undefined
-      ? parseFloat(this.elements[0].style.scale)
-      : undefined;
+  getCurrentValue(): number {
+    const element = this.elements[0] !== undefined;
+    if (element === undefined) return undefined;
+    return getElementScale(element);
   }
 }
