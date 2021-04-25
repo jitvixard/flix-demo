@@ -22,11 +22,11 @@ export class SubtleFadeAnimation implements Animation {
   constructor(private hotbar: HTMLElement, fadingOn: boolean) {
     const distance = 125;
 
-    this.startPosition = cascadingOn ? distance : 0;
-    this.endPosition = cascadingOn ? 0 : distance;
+    this.startPosition = fadingOn ? distance : 0;
+    this.endPosition = fadingOn ? 0 : distance;
 
-    this.startOpacity = cascadingOn ? 0 : 1;
-    this.endOpacity = cascadingOn ? 1 : 0;
+    this.startOpacity = fadingOn ? 0 : 1;
+    this.endOpacity = fadingOn ? 1 : 0;
   }
 
   start(): Subject<boolean> {
@@ -34,28 +34,28 @@ export class SubtleFadeAnimation implements Animation {
     return this.completed$;
   }
 
-  private play(segment: HTMLElement[]) {
+  private play() {
     this.opacityAnimation = new OpacityAnimationService(
-      segment,
+      [this.hotbar],
       this.startOpacity,
       this.endOpacity,
       this.duration,
     );
     this.translationAnimation = new TranslationAnimationService(
       'X',
-      segment,
+      [this.hotbar],
       this.startPosition,
       this.endPosition,
       this.duration,
     );
 
     this.opacityAnimation.start().subscribe((complete) => {
-      this.opacityAnimation = complete;
+      this.opacityComplete = complete;
       if (this.opacityComplete && this.translationComplete)
         this.completed$.next(true);
     });
     this.translationAnimation.start().subscribe((complete) => {
-      this.translationAnimation = complete;
+      this.translationComplete = complete;
       if (this.opacityComplete && this.translationComplete)
         this.completed$.next(true);
     });

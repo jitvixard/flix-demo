@@ -60,11 +60,11 @@ export class CascadeAnimation implements Animation {
     );
 
     this.opacityAnimation.start().subscribe((complete) => {
-      this.opacityAnimation = complete;
+      this.opacityComplete = complete;
       if (this.opacityComplete && this.translationComplete) this.queueSegment();
     });
     this.translationAnimation.start().subscribe((complete) => {
-      this.translationAnimation = complete;
+      this.translationComplete = complete;
       if (this.opacityComplete && this.translationComplete) this.queueSegment();
     });
   }

@@ -54,6 +54,11 @@ export abstract class AbstractAnimationService {
   }
 
   protected update(): void {
+    if (this.currentValue.toFixed(2) === this.targetValue.toFixed(2)) {
+      this.complete();
+      return;
+    }
+
     this.currentValue = lerp(
       this.startTime,
       this.duration,
@@ -62,11 +67,6 @@ export abstract class AbstractAnimationService {
     );
 
     this.updateElementValues();
-
-    if (this.currentValue.toFixed(2) === this.targetValue.toFixed(2)) {
-      this.complete();
-      return;
-    }
 
     this.currentIntervalId = setTimeout(
       this.update.bind(this),
