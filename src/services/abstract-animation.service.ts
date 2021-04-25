@@ -21,15 +21,14 @@ export abstract class AbstractAnimationService {
     adjustDuration?: boolean,
   ) {
     if (adjustDuration) this.adjustDuration = adjustDuration;
-    this.start();
   }
 
-  protected abstract setElementValue(value: number): number;
-  protected abstract getElementValue(): number;
+  protected abstract updateElementValues(): void;
+  protected abstract getCurrentValue(): number;
 
   protected start(): void {
     this.startTime = Date.now();
-    this.currentValue = this.getElementValue();
+    this.currentValue = this.getCurrentValue();
 
     if (this.adjustDuration) {
       this.duration = calculateUpdatedDuration(
@@ -47,9 +46,14 @@ export abstract class AbstractAnimationService {
   }
 
   protected update(): void {
-    this.currentValue = this.setElementValue(
-      lerp(this.startTime, this.duration, this.startValue, this.targetValue),
+    this.currentValue = lerp(
+      this.startTime,
+      this.duration,
+      this.startValue,
+      this.targetValue,
     );
+
+    this.updateElementValues();
 
     if (this.currentValue.toFixed(2) === this.targetValue.toFixed(2)) {
       this.end();
@@ -62,7 +66,7 @@ export abstract class AbstractAnimationService {
     );
   }
 
-  protected end(): void {
+  protected end = (): void => {
     this.complete$.next(true);
-  }
+  };
 }

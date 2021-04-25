@@ -1,11 +1,15 @@
 import { AbstractAnimationService } from './abstract-animation.service';
 
 export class ScaleAnimationService extends AbstractAnimationService {
-  protected getElementValue(): number {
-    return 0;
+  protected updateElementValues(): void {
+    this.elements.forEach((e) => {
+      e.style.scale = this.currentValue.toFixed(2);
+    });
   }
 
-  protected setElementValue(): number {
-    return 0;
+  protected getCurrentValue(): number {
+    return this.elements[0] !== undefined
+      ? parseFloat(this.elements[0].style.scale)
+      : undefined;
   }
 }
