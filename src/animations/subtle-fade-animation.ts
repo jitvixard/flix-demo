@@ -2,9 +2,8 @@ import { OpacityAnimationService } from '../services/opacity-animation.service';
 import { TranslationAnimationService } from '../services/translation-animation.service';
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
-import { isScreenFullWidth } from '../util/utility';
 
-export class CascadeAnimation implements Animation {
+export class SubtleFadeAnimation implements Animation {
   completed$: Subject<boolean>;
 
   private opacityAnimation: OpacityAnimationService;
@@ -19,11 +18,9 @@ export class CascadeAnimation implements Animation {
   private readonly endOpacity: number;
 
   private duration = 1000;
-  private segmentIndex = 0;
 
-  constructor(private segments: HTMLElement[][], cascadingOn: boolean) {
-    const fullWidth = isScreenFullWidth();
-    const distance = fullWidth ? 130 : 230;
+  constructor(private hotbar: HTMLElement, fadingOn: boolean) {
+    const distance = 125;
 
     this.startPosition = cascadingOn ? distance : 0;
     this.endPosition = cascadingOn ? 0 : distance;
@@ -33,18 +30,11 @@ export class CascadeAnimation implements Animation {
   }
 
   start(): Subject<boolean> {
-    this.segmentIndex = -1;
-    this.queueSegment();
+    this.play();
     return this.completed$;
   }
 
-  private queueSegment() {
-    this.segmentIndex++;
-    if (this.shouldStop()) this.completed$.next(true);
-    else this.playSegment(this.segments[this.segmentIndex]);
-  }
-
-  private playSegment(segment: HTMLElement[]) {
+  private play(segment: HTMLElement[]) {
     this.opacityAnimation = new OpacityAnimationService(
       segment,
       this.startOpacity,
@@ -52,7 +42,7 @@ export class CascadeAnimation implements Animation {
       this.duration,
     );
     this.translationAnimation = new TranslationAnimationService(
-      'Y',
+      'X',
       segment,
       this.startPosition,
       this.endPosition,
@@ -61,14 +51,13 @@ export class CascadeAnimation implements Animation {
 
     this.opacityAnimation.start().subscribe((complete) => {
       this.opacityAnimation = complete;
-      if (this.opacityComplete && this.translationComplete) this.queueSegment();
+      if (this.opacityComplete && this.translationComplete)
+        this.completed$.next(true);
     });
     this.translationAnimation.start().subscribe((complete) => {
       this.translationAnimation = complete;
-      if (this.opacityComplete && this.translationComplete) this.queueSegment();
+      if (this.opacityComplete && this.translationComplete)
+        this.completed$.next(true);
     });
   }
-
-  private shouldStop = (): boolean =>
-    this.segmentIndex === this.segments.length;
 }
