@@ -2,6 +2,7 @@ import { OpacityAnimationService } from '../services/opacity-animation.service';
 import { TranslationAnimationService } from '../services/translation-animation.service';
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 export class SubtleFadeAnimation implements Animation {
   completed$: Subject<boolean>;
@@ -49,15 +50,21 @@ export class SubtleFadeAnimation implements Animation {
       this.duration,
     );
 
-    this.opacityAnimation.start().subscribe((complete) => {
-      this.opacityComplete = complete;
-      if (this.opacityComplete && this.translationComplete)
-        this.completed$.next(true);
-    });
-    this.translationAnimation.start().subscribe((complete) => {
-      this.translationComplete = complete;
-      if (this.opacityComplete && this.translationComplete)
-        this.completed$.next(true);
-    });
+    this.opacityAnimation
+      .start()
+      .pipe(filter((v) => v))
+      .subscribe((complete) => {
+        this.opacityComplete = complete;
+        if (this.opacityComplete && this.translationComplete)
+          this.completed$.next(true);
+      });
+    this.translationAnimation
+      .start()
+      .pipe(filter((v) => v))
+      .subscribe((complete) => {
+        this.translationComplete = complete;
+        if (this.opacityComplete && this.translationComplete)
+          this.completed$.next(true);
+      });
   }
 }
