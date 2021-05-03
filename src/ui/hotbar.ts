@@ -1,20 +1,32 @@
-export class Hotbar {
-  readonly elementRef: HTMLElement;
+import { CascadeAnimation } from '../animations/cascade-animation';
+import { SubtleFadeAnimation } from '../animations/subtle-fade-animation';
+import { filter, first } from 'rxjs/operators';
 
-  private readonly columns: HTMLElement[][];
-  private readonly slots: HTMLElement[];
+export class Hotbar {
+  private readonly hotbarRef: HTMLElement;
+
+  private cascadeAnimation: CascadeAnimation;
+  private subtleFadeAnimation: SubtleFadeAnimation;
+
+  private hotbarOnState = true;
 
   constructor() {
-    this.elementRef = document.getElementById('');
+    this.hotbarRef = document.getElementById('hotbar');
+  }
 
-    this.slots = <HTMLElement[]>(<any>document.getElementsByClassName(''));
+  cascade(): void {}
 
-    let i = 0;
-    const rowSize = Math.round(this.slots.length / 2);
-
-    while (i < rowSize) {
-      this.columns[0] = [this.slots[i], this.slots[i + rowSize]];
-      i++;
-    }
+  subtleFade(): void {
+    this.hotbarOnState = !this.hotbarOnState;
+    this.subtleFadeAnimation = new SubtleFadeAnimation(
+      this.hotbarRef,
+      this.hotbarOnState,
+    );
+    this.subtleFadeAnimation
+      .start()
+      .pipe(first((v) => v))
+      .subscribe((complete) => {
+        if (complete) this.subtleFadeAnimation = undefined;
+      });
   }
 }

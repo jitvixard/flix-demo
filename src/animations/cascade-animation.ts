@@ -3,6 +3,7 @@ import { TranslationAnimationService } from '../services/translation-animation.s
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
 import { isScreenFullWidth } from '../util/utility';
+import { filter } from 'rxjs/operators';
 
 export class CascadeAnimation implements Animation {
   completed$: Subject<boolean>;
@@ -59,14 +60,22 @@ export class CascadeAnimation implements Animation {
       this.duration,
     );
 
-    this.opacityAnimation.start().subscribe((complete) => {
-      this.opacityComplete = complete;
-      if (this.opacityComplete && this.translationComplete) this.queueSegment();
-    });
-    this.translationAnimation.start().subscribe((complete) => {
-      this.translationComplete = complete;
-      if (this.opacityComplete && this.translationComplete) this.queueSegment();
-    });
+    this.opacityAnimation
+      .start()
+      .pipe(filter((v) => v))
+      .subscribe((complete) => {
+        this.opacityComplete = complete;
+        if (this.opacityComplete && this.translationComplete)
+          this.queueSegment();
+      });
+    this.translationAnimation
+      .start()
+      .pipe(filter((v) => v))
+      .subscribe((complete) => {
+        this.translationComplete = complete;
+        if (this.opacityComplete && this.translationComplete)
+          this.queueSegment();
+      });
   }
 
   private shouldStop = (): boolean =>

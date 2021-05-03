@@ -1,4 +1,5 @@
-[Mm]aterials/
+./.idea
+.idea/
 .vscode/
 
 node_modules
