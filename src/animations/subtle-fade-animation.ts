@@ -28,9 +28,11 @@ export class SubtleFadeAnimation implements Animation {
 
     this.startOpacity = fadingOn ? 0 : 1;
     this.endOpacity = fadingOn ? 1 : 0;
+
+    this.completed$ = new Subject<boolean>();
   }
 
-  start(): Subject<boolean> {
+  start(override?: boolean): Subject<boolean> {
     this.play();
     return this.completed$;
   }
@@ -66,5 +68,10 @@ export class SubtleFadeAnimation implements Animation {
         if (this.opacityComplete && this.translationComplete)
           this.completed$.next(true);
       });
+  }
+
+  stop(): void {
+    this.translationAnimation.stop();
+    this.opacityAnimation.stop();
   }
 }

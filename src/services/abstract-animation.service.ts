@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs';
-import { calculateUpdatedDuration } from '../util/utility';
+import { calculateRemainingDuration } from '../util/utility';
 import { lerp } from '../util/transformation';
 
 export abstract class AbstractAnimationService {
@@ -14,16 +14,15 @@ export abstract class AbstractAnimationService {
   private timeoutDelay = 3;
 
   constructor(
-    protected elements: HTMLElement[],
-    protected startValue: number,
-    protected targetValue: number,
+    protected readonly elements: HTMLElement[],
+    protected readonly startValue: number,
+    protected readonly targetValue: number,
     protected duration: number,
     currentValue?: number,
     adjustDuration?: boolean,
   ) {
-    if (currentValue) this.currentValue = currentValue;
+    this.currentValue = currentValue ? currentValue : this.getCurrentValue();
     if (adjustDuration !== undefined) this.adjustDuration = adjustDuration;
-    if (this.adjustDuration) this.startValue = this.currentValue;
   }
 
   protected abstract updateElementValues(): void;
@@ -34,12 +33,14 @@ export abstract class AbstractAnimationService {
     this.currentValue = this.getCurrentValue();
 
     if (this.adjustDuration) {
-      this.duration = calculateUpdatedDuration(
+      const remainingDuration = calculateRemainingDuration(
         this.startValue,
         this.currentValue,
         this.targetValue,
         this.duration,
       );
+      const offset = this.duration - remainingDuration;
+      this.startTime -= offset;
     }
 
     this.currentIntervalId = setTimeout(
@@ -56,10 +57,9 @@ export abstract class AbstractAnimationService {
     this.end();
   }
 
-  setValue(targetValue: number) {
-    this.targetValue = targetValue;
-    this.currentValue = this.targetValue;
-    this.updateElementValues();
+  stop(): void {
+    clearInterval(this.currentIntervalId);
+    this.complete$.next(true);
   }
 
   protected update(): void {

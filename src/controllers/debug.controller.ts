@@ -7,7 +7,6 @@ export class DebugController {
   }
 
   private playSubtleFadeAnimation() {
-    console.log('playing subtle fade');
     this.hotBar.subtleFade();
   }
 }

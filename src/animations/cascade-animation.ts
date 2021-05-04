@@ -80,4 +80,9 @@ export class CascadeAnimation implements Animation {
 
   private shouldStop = (): boolean =>
     this.segmentIndex === this.segments.length;
+
+  stop(): void {
+    this.opacityAnimation.stop();
+    this.translationAnimation.stop();
+  }
 }

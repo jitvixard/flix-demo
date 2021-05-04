@@ -2,6 +2,7 @@ import { isScreenFullWidth } from './util/utility';
 import { UiComponentFactory } from './factories/ui-component-factory';
 import { HotBar } from './ui/hot-bar';
 import { DebugController } from './controllers/debug.controller';
+import { bindResizeListener } from './util/bindings';
 
 export class App {
   //ui-components
@@ -19,7 +20,6 @@ export class App {
   fullWidth: boolean;
 
   constructor() {
-    console.log('constructor fires');
     // *** references *** //
     this.hotBarStyleRef = document.getElementById('hotbarStyle');
     this.alternateStyleActivated = false;
@@ -30,10 +30,14 @@ export class App {
 
     //Setting up controllers
     this.debugController = new DebugController(this.hotBar);
+
+    bindResizeListener(this);
   }
 
   onResize = () => {
-    const isNowFullWidth = isScreenFullWidth();
+    this.hotBar.updateColumns();
+
+    /*const isNowFullWidth = isScreenFullWidth();
 
     if (this.fullWidth !== undefined && this.fullWidth == isNowFullWidth) {
       return;
@@ -45,7 +49,9 @@ export class App {
       this.hotBarStyleRef.setAttribute('href', this.defaultStyleSheet);
     } else {
       this.hotBarStyleRef.setAttribute('href', this.smallerStyleSheet);
-    }
+    }*/
+
+    this.hotBar.updateColumns();
 
     //TODO resize hot bar
   };

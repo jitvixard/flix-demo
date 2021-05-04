@@ -3,12 +3,26 @@ import { HotBar } from '../ui/hot-bar';
 
 export function bindHotBarButtons(hotBar: HotBar) {
   document
+    .getElementById('subtleFadeToggle')
+    .addEventListener('click', () => hotBar.subtleFade());
+  document
     .getElementById('subtleFadeOnButton')
-    .addEventListener('click', (e: Event) => hotBar.subtleFade());
+    .addEventListener('click', () => hotBar.subtleFade(true));
 
   document
     .getElementById('subtleFadeOffButton')
-    .addEventListener('click', (e: Event) => hotBar.subtleFade());
+    .addEventListener('click', () => hotBar.subtleFade(false));
+
+  document
+    .getElementById('cascadeToggle')
+    .addEventListener('click', () => hotBar.cascade());
+  document
+    .getElementById('cascadeOnButton')
+    .addEventListener('click', () => hotBar.cascade(true));
+
+  document
+    .getElementById('cascadeOffButton')
+    .addEventListener('click', () => hotBar.cascade(false));
 }
 
 /**

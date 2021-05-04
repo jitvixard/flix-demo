@@ -19,10 +19,6 @@ export class TranslationAnimationService extends AbstractAnimationService {
       currentValue,
       adjustDuration,
     );
-    this.elements = elements;
-    this.startValue = startValue;
-    this.targetValue = targetValue;
-    this.duration = duration;
   }
 
   protected updateElementValues(): void {
