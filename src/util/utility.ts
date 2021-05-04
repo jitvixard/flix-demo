@@ -1,3 +1,5 @@
+import { isNumeric } from 'rxjs/internal-compatibility';
+
 export function valueIsEqual(
   valueA: number | string,
   valueB: number | string,
@@ -30,13 +32,17 @@ export function getElementOpacity(element: HTMLElement): number {
   return parseFloat(element.style.opacity);
 }
 
-export function getElementScale(element: HTMLElement): number {
+export function getElementScale(element: HTMLElement) {
   return parseFloat(element.style.scale);
 }
 
-export function getElementTranslation(element: HTMLElement): number {
+export function getElementTranslation(element: HTMLElement) {
   let exp = new RegExp('d+[.]d+');
-  return parseFloat(exp.exec(element.style.transform)[0]);
+  return isNumeric(exp)
+    ? parseFloat(exp.exec(element.style.transform)[0])
+    : undefined;
 }
 
-export function isScreenFullWidth(): boolean {}
+export function isScreenFullWidth(): boolean {
+  return window.innerWidth > 1200;
+}

@@ -1,11 +1,15 @@
 import { App } from '../app';
-import { Apple } from '../model/items/impl/apple';
-import { Banana } from '../model/items/impl/banana';
-import { Bread } from '../model/items/impl/bread';
-import { Carrot } from '../model/items/impl/carrot';
-import { Orange } from '../model/items/impl/orange';
-import { Pear } from '../model/items/impl/pear';
-import { getItemFromName } from './factory';
+import { HotBar } from '../ui/hot-bar';
+
+export function bindHotBarButtons(hotBar: HotBar) {
+  document
+    .getElementById('subtleFadeOnButton')
+    .addEventListener('click', (e: Event) => hotBar.subtleFade());
+
+  document
+    .getElementById('subtleFadeOffButton')
+    .addEventListener('click', (e: Event) => hotBar.subtleFade());
+}
 
 /**
  * @param app Main application buttons are being bound to.
@@ -16,34 +20,28 @@ export function bindButtons(app: App): void {
   /*
    * Popup Toast
    */
-  let bananaBtn = document.getElementById('addDemoBananaButton');
+  /*let bananaBtn = document.getElementById('addDemoBananaButton');
   bananaBtn.addEventListener('click', (e: Event) => app.popup(new Banana(1)));
 
   let carrotBtn = document.getElementById('addDemoCarrotButton');
   carrotBtn.addEventListener('click', (e: Event) => app.popup(new Carrot(3)));
 
   let pearBtn = document.getElementById('addDemoPearButton');
-  pearBtn.addEventListener('click', (e: Event) => app.popup(new Pear(1)));
+  pearBtn.addEventListener('click', (e: Event) => app.popup(new Pear(1)));*/
 
   /*
    * Hotbar Transitions
    */
-  let cascadeOnBtn = document.getElementById('cascadeOnButton');
+  /*let cascadeOnBtn = document.getElementById('cascadeOnButton');
   cascadeOnBtn.addEventListener('click', (e: Event) => app.cascade(true));
 
   let cascadeOffBtn = document.getElementById('cascadeOffButton');
-  cascadeOffBtn.addEventListener('click', (e: Event) => app.cascade(false));
-
-  let fadeOnbtn = document.getElementById('subtleFadeOnButton');
-  fadeOnbtn.addEventListener('click', (e: Event) => app.subtleFade(true));
-
-  let fadeOffbtn = document.getElementById('subtleFadeOffButton');
-  fadeOffbtn.addEventListener('click', (e: Event) => app.subtleFade(false));
+  cascadeOffBtn.addEventListener('click', (e: Event) => app.cascade(false));*/
 
   /*
    * Item Additions
    */
-  let appleBtn = document.getElementById('addAppleButton');
+  /* let appleBtn = document.getElementById('addAppleButton');
   appleBtn.addEventListener('click', (e: Event) => app.add(new Apple(1), 1));
 
   let breadBtn = document.getElementById('addBreadButton');
@@ -59,13 +57,13 @@ export function bindButtons(app: App): void {
       element.addEventListener('click', (e: Event) =>
         app.add(getItemFromName(buttonValue)),
       );
-  });
+  });*/
 
   /*
    * Slot Selection
    */
   let selectionParent = document.getElementById('selection-buttons');
-  Array.from(selectionParent.getElementsByTagName('input')).forEach(
+  /*Array.from(selectionParent.getElementsByTagName('input')).forEach(
     (element) => {
       let buttonValue = Number(element.getAttribute('value'));
       if (buttonValue !== undefined)
@@ -73,7 +71,7 @@ export function bindButtons(app: App): void {
           app.select(buttonValue - 1),
         );
     },
-  );
+  );*/
 
   /*
    * Style Alternation

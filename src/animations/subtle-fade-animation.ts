@@ -20,7 +20,7 @@ export class SubtleFadeAnimation implements Animation {
 
   private duration = 1000;
 
-  constructor(private hotbar: HTMLElement, fadingOn: boolean) {
+  constructor(private hotBarElement: HTMLElement, fadingOn: boolean) {
     const distance = 125;
 
     this.startPosition = fadingOn ? distance : 0;
@@ -37,14 +37,14 @@ export class SubtleFadeAnimation implements Animation {
 
   private play() {
     this.opacityAnimation = new OpacityAnimationService(
-      [this.hotbar],
+      [this.hotBarElement],
       this.startOpacity,
       this.endOpacity,
       this.duration,
     );
     this.translationAnimation = new TranslationAnimationService(
       'X',
-      [this.hotbar],
+      [this.hotBarElement],
       this.startPosition,
       this.endPosition,
       this.duration,

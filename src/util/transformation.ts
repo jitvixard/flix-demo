@@ -34,6 +34,10 @@ function getElapsed(
   );
 }
 
+export function valueAsTransformString(value: number, axis: 'X' | 'Y') {
+  return 'translate' + axis + '(' + value + '%)';
+}
+
 /**
  * Assigning utility function to window.
  * This would usually be allocated in a static class,

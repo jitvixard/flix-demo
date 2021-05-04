@@ -1,47 +1,39 @@
-import { AbstractItem as Item } from './model/items/abstract-item';
-import { Hotbar } from './hotbar/hotbar';
-import { Toast } from './pop-up/toast';
-import { bindButtons, bindResizeListener } from './util/bindings';
+import { isScreenFullWidth } from './util/utility';
+import { UiComponentFactory } from './factories/ui-component-factory';
+import { HotBar } from './ui/hot-bar';
+import { DebugController } from './controllers/debug.controller';
 
 export class App {
-  hotbarStyleRef: HTMLElement;
+  //ui-components
+  hotBar: HotBar;
+
+  //controllers
+  debugController: DebugController;
+
+  hotBarStyleRef: HTMLElement;
+
   defaultStyleSheet = 'style/fullwidth.css';
   smallerStyleSheet = 'style/reducedwidth.css';
-
-  private hotbar = new Hotbar();
-  private toast = new Toast();
 
   alternateStyleActivated: boolean;
   fullWidth: boolean;
 
   constructor() {
+    console.log('constructor fires');
     // *** references *** //
-    this.hotbarStyleRef = document.getElementById('hotbarStyle');
-
+    this.hotBarStyleRef = document.getElementById('hotbarStyle');
     this.alternateStyleActivated = false;
 
-    // *** bindings *** //
-    bindButtons(this);
-    bindResizeListener(this);
+    //Getting references to UI components
+    UiComponentFactory.CreateComponents(this);
+    this.hotBar = UiComponentFactory.hotBar;
+
+    //Setting up controllers
+    this.debugController = new DebugController(this.hotBar);
   }
 
-  add = (item: Item, atIndex?: number) => {
-    this.hotbar.add(item, atIndex);
-    this.toast.add(item);
-  };
-
-  select = (index: number) => {
-    this.hotbar.select(index);
-  };
-
-  popup = (item: Item) => this.toast.add(item);
-
-  cascade = (on: boolean) => this.hotbar.cascade(on);
-
-  subtleFade = (on: boolean) => this.hotbar.fade(on);
-
   onResize = () => {
-    const isNowFullWidth = window.innerWidth > 1200;
+    const isNowFullWidth = isScreenFullWidth();
 
     if (this.fullWidth !== undefined && this.fullWidth == isNowFullWidth) {
       return;
@@ -50,12 +42,12 @@ export class App {
     this.fullWidth = isNowFullWidth;
 
     if (this.fullWidth) {
-      this.hotbarStyleRef.setAttribute('href', this.defaultStyleSheet);
+      this.hotBarStyleRef.setAttribute('href', this.defaultStyleSheet);
     } else {
-      this.hotbarStyleRef.setAttribute('href', this.smallerStyleSheet);
+      this.hotBarStyleRef.setAttribute('href', this.smallerStyleSheet);
     }
 
-    this.hotbar.resize();
+    //TODO resize hot bar
   };
 
   alternateStyle = (button: HTMLElement) => {

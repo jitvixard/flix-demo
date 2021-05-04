@@ -9,8 +9,10 @@ export class ScaleAnimationService extends AbstractAnimationService {
   }
 
   getCurrentValue(): number {
-    const element = this.elements[0] !== undefined;
-    if (element === undefined) return undefined;
+    let element: HTMLElement;
+    while (element === undefined) {
+      element = this.elements[0];
+    }
     return getElementScale(element);
   }
 }

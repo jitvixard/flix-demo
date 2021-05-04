@@ -8,19 +8,22 @@ export abstract class AbstractAnimationService {
   protected adjustDuration = true;
 
   protected currentIntervalId: number;
-  protected currentValue: number;
+  protected currentValue = 0;
 
   private startTime: number;
   private timeoutDelay = 3;
 
   constructor(
     protected elements: HTMLElement[],
-    private startValue: number,
-    private targetValue: number,
-    private duration: number,
+    protected startValue: number,
+    protected targetValue: number,
+    protected duration: number,
+    currentValue?: number,
     adjustDuration?: boolean,
   ) {
-    if (adjustDuration) this.adjustDuration = adjustDuration;
+    if (currentValue) this.currentValue = currentValue;
+    if (adjustDuration !== undefined) this.adjustDuration = adjustDuration;
+    if (this.adjustDuration) this.startValue = this.currentValue;
   }
 
   protected abstract updateElementValues(): void;
@@ -51,6 +54,12 @@ export abstract class AbstractAnimationService {
     this.currentValue = this.targetValue;
     this.updateElementValues();
     this.end();
+  }
+
+  setValue(targetValue: number) {
+    this.targetValue = targetValue;
+    this.currentValue = this.targetValue;
+    this.updateElementValues();
   }
 
   protected update(): void {

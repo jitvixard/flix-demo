@@ -8,9 +8,17 @@ export class TranslationAnimationService extends AbstractAnimationService {
     startValue: number,
     targetValue: number,
     duration: number,
+    currentValue?: number,
     adjustDuration?: boolean,
   ) {
-    super(elements, startValue, targetValue, duration, adjustDuration);
+    super(
+      elements,
+      startValue,
+      targetValue,
+      duration,
+      currentValue,
+      adjustDuration,
+    );
     this.elements = elements;
     this.startValue = startValue;
     this.targetValue = targetValue;
