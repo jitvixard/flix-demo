@@ -1,22 +1,3 @@
-import { isNumeric } from 'rxjs/internal-compatibility';
-
-export function valueIsEqual(
-  valueA: number | string,
-  valueB: number | string,
-): boolean {
-  let numA: number;
-  let numB: number;
-
-  if (typeof valueA === 'string') {
-    numA = parseFloat(valueA);
-  }
-  if (typeof valueB === 'string') {
-    numB = parseFloat(valueB);
-  }
-
-  return numA.toFixed(2) === numB.toFixed(2);
-}
-
 export function calculateRemainingDuration(
   idealStartPosition: number,
   currentPosition: number,
@@ -64,7 +45,5 @@ export function calculateHotBarColumns(): HTMLElement[][] {
     }
     columns[i++] = column;
   }
-
-  console.log(columns);
   return columns;
 }

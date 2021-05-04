@@ -6,11 +6,12 @@ import { isScreenFullWidth } from '../util/utility';
 import { filter } from 'rxjs/operators';
 
 export class CascadeAnimation implements Animation {
-  completed$: Subject<boolean>;
+  completed$ = new Subject<boolean>();
 
   private opacityAnimation: OpacityAnimationService;
   private translationAnimation: TranslationAnimationService;
 
+  private cascadeComplete: boolean;
   private opacityComplete: boolean;
   private translationComplete: boolean;
 
@@ -19,10 +20,11 @@ export class CascadeAnimation implements Animation {
   private readonly startOpacity: number;
   private readonly endOpacity: number;
 
-  private duration = 1000;
-  private segmentIndex = 0;
+  private segmentIndex: number;
 
-  constructor(private segments: HTMLElement[][], cascadingOn: boolean) {
+  private duration = 1000;
+
+  constructor(private segments: HTMLElement[][], private cascadingOn: boolean) {
     const fullWidth = isScreenFullWidth();
     const distance = fullWidth ? 130 : 230;
 
@@ -31,21 +33,29 @@ export class CascadeAnimation implements Animation {
 
     this.startOpacity = cascadingOn ? 0 : 1;
     this.endOpacity = cascadingOn ? 1 : 0;
+
+    this.segmentIndex = cascadingOn ? 0 : this.segments.length - 1;
   }
 
   start(): Subject<boolean> {
-    this.segmentIndex = -1;
-    this.queueSegment();
+    this.playSegment(this.segments[this.segmentIndex]);
     return this.completed$;
   }
 
   private queueSegment() {
-    this.segmentIndex++;
+    this.segmentIndex = this.cascadingOn
+      ? this.segmentIndex + 1
+      : this.segmentIndex - 1;
     if (this.shouldStop()) this.completed$.next(true);
     else this.playSegment(this.segments[this.segmentIndex]);
   }
 
   private playSegment(segment: HTMLElement[]) {
+    this.opacityComplete = false;
+    this.translationComplete = false;
+
+    console.log('play ' + this.segmentIndex);
+
     this.opacityAnimation = new OpacityAnimationService(
       segment,
       this.startOpacity,
@@ -78,10 +88,16 @@ export class CascadeAnimation implements Animation {
       });
   }
 
-  private shouldStop = (): boolean =>
-    this.segmentIndex === this.segments.length;
+  private shouldStop(): boolean {
+    return (
+      this.cascadeComplete ||
+      this.segmentIndex < 0 ||
+      this.segmentIndex >= this.segments.length
+    );
+  }
 
   stop(): void {
+    this.cascadeComplete = true;
     this.opacityAnimation.stop();
     this.translationAnimation.stop();
   }

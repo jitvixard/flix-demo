@@ -23,7 +23,6 @@ export class HotBar {
   cascade(elementsStateOverride?: boolean): void {
     if (this.cascadeAnimation) {
       this.cascadeAnimation.stop();
-      return;
     }
 
     this.elementsOnState =
