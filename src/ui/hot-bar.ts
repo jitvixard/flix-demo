@@ -64,7 +64,6 @@ export class HotBar {
   subtleFade(hotBarStateOverride?: boolean) {
     if (this.subtleFadeAnimation) {
       this.subtleFadeAnimation.stop();
-      return;
     }
 
     this.hotBarOnState =
