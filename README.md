@@ -22,6 +22,8 @@ These services allow for an animation to be easily interrupted and stopped by ex
 
 The main benefit of the observables was that when it came to larger animations, instead of trying to chain together a series of timeouts, I could instead break the animation down into smaller chunks and fire those chunks as each observable emitted on completion.
 
+Another benefit however, was the easy implementation of interruption systems, to allow button clicks to stop animations, start new ones, whilst having them adjust to the current position rather than behave as if they were in an on/off position. 
+
 My thoughts were that should in a practical sense the UI project need frequent animations (as done here), then a service could be created to handle the individual parts of the animation (like scale, see `src/services/animation/scale-animation.service.ts`) and then those services can be scripted together in a predefined larger animation (such as `animations/item-selection-animation.ts`).
 
 The way the `rxjs` `observables` are implemented here are just one of many. Depending on the needs of the animation, and limitations of the Coherent HTML Engine, further steps could be taken to optimise this further. For example combining an observable pattern with `rxjs` state stores would persist data in client side caches. If coherent entertained this, then data between scenes may not need reloading and could possibly instead by cached for a quicker retrieval.
