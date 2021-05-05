@@ -6,7 +6,7 @@ body {
 
 #controlPanel {
   margin: auto;
-  width: 35%;
+  width: 40%;
 
   position: absolute;
 
@@ -81,8 +81,8 @@ body {
 }
 
 .hotbar-item .selected {
-  max-height: 100%;
-  max-width: 100%;
+  max-height: 132px;
+  max-width: 132px;
 
   z-index: -1;
   position: absolute;

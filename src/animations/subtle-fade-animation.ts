@@ -1,5 +1,5 @@
-import { OpacityAnimationService } from '../services/opacity-animation.service';
-import { TranslationAnimationService } from '../services/translation-animation.service';
+import { OpacityAnimationService } from '../services/animation/opacity-animation.service';
+import { TranslationAnimationService } from '../services/animation/translation-animation.service';
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';

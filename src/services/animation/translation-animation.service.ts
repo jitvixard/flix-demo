@@ -1,5 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
-import { getElementTranslation } from '../util/utility';
+import { getElementTranslation } from '../../util/utility';
 
 export class TranslationAnimationService extends AbstractAnimationService {
   constructor(

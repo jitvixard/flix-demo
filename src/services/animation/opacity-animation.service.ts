@@ -1,5 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
-import { getElementOpacity } from '../util/utility';
+import { getElementOpacity } from '../../util/utility';
 
 export class OpacityAnimationService extends AbstractAnimationService {
   protected updateElementValues(): void {

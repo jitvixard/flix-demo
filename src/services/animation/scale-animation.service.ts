@@ -1,5 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
-import { getElementScale } from '../util/utility';
+import { getElementScale } from '../../util/utility';
 
 export class ScaleAnimationService extends AbstractAnimationService {
   protected updateElementValues(): void {

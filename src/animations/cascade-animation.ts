@@ -1,5 +1,5 @@
-import { OpacityAnimationService } from '../services/opacity-animation.service';
-import { TranslationAnimationService } from '../services/translation-animation.service';
+import { OpacityAnimationService } from '../services/animation/opacity-animation.service';
+import { TranslationAnimationService } from '../services/animation/translation-animation.service';
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
 import { isScreenFullWidth } from '../util/utility';
@@ -22,7 +22,7 @@ export class CascadeAnimation implements Animation {
 
   private segmentIndex: number;
 
-  private duration = 1000;
+  private duration = 100;
 
   constructor(private segments: HTMLElement[][], private cascadingOn: boolean) {
     const fullWidth = isScreenFullWidth();
@@ -53,8 +53,6 @@ export class CascadeAnimation implements Animation {
   private playSegment(segment: HTMLElement[]) {
     this.opacityComplete = false;
     this.translationComplete = false;
-
-    console.log('play ' + this.segmentIndex);
 
     this.opacityAnimation = new OpacityAnimationService(
       segment,

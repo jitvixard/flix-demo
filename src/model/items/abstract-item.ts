@@ -3,13 +3,14 @@ export abstract class AbstractItem {
   public readonly displayName: string;
   public amount: number;
 
-  public elementRef: HTMLDivElement;
+  //for hot bar
+  public contentRef: HTMLDivElement;
   public iconRef: HTMLImageElement;
+  public textRef: HTMLParagraphElement;
+  //for toast
   public popupRef: HTMLElement;
 
-  public routineId: number;
-
-  constructor(amount: number) {
+  protected constructor(amount: number) {
     this.amount = amount;
   }
 

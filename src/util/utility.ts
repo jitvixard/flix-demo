@@ -17,7 +17,8 @@ export function getElementOpacity(element: HTMLElement): number {
 }
 
 export function getElementScale(element: HTMLElement) {
-  return parseFloat(element.style.scale);
+  const scaleString = element.style.scale;
+  return scaleString ? parseFloat(element.style.scale) : 1;
 }
 
 export function getElementTranslation(element: HTMLElement): number {
@@ -35,15 +36,22 @@ export function calculateHotBarColumns(): HTMLElement[][] {
   const elements = <HTMLElement[]>(
     (<any>document.getElementsByClassName('hotbar-item'))
   );
+  const offset = elements.length / elementsToColumn;
   let i = 0;
-  let totalElements = 0;
   while (i < elements.length / elementsToColumn) {
+    let entries = i;
     const column = new Array<HTMLElement>();
-    let elementCount = 0;
-    while (elementCount < elementsToColumn) {
-      column[elementCount++] = elements[totalElements++];
+    while (column.length < elementsToColumn) {
+      column.push(elements[entries]);
+      entries += offset;
     }
-    columns[i++] = column;
+    columns.push(column);
+    i++;
   }
   return columns;
+}
+
+export function removeElement(element: HTMLElement) {
+  const parent = element.parentElement;
+  parent.removeChild(element);
 }

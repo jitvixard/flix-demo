@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
-import { calculateRemainingDuration } from '../util/utility';
-import { lerp } from '../util/transformation';
+import { calculateRemainingDuration } from '../../util/utility';
+import { lerp } from '../../util/transformation';
 
 export abstract class AbstractAnimationService {
   complete$ = new Subject<boolean>();

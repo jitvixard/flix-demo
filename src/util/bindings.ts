@@ -1,7 +1,15 @@
 import { App } from '../app';
 import { HotBar } from '../ui/hot-bar';
+import { Toast } from '../ui/toast';
+import { Banana } from '../model/items/impl/banana';
+import { Carrot } from '../model/items/impl/carrot';
+import { Pear } from '../model/items/impl/pear';
+import { Orange } from '../model/items/impl/orange';
+import { Bread } from '../model/items/impl/bread';
+import { Apple } from '../model/items/impl/apple';
+import { getItemFromName } from './factory';
 
-export function bindHotBarButtons(hotBar: HotBar) {
+export function bindHotBarAnimationDebugButtons(hotBar: HotBar) {
   document
     .getElementById('subtleFadeToggle')
     .addEventListener('click', () => hotBar.subtleFade());
@@ -25,75 +33,61 @@ export function bindHotBarButtons(hotBar: HotBar) {
     .addEventListener('click', () => hotBar.cascade(false));
 }
 
-/**
- * @param app Main application buttons are being bound to.
- *
- * Utility function to bind all buttons.
- */
-export function bindButtons(app: App): void {
-  /*
-   * Popup Toast
-   */
-  /*let bananaBtn = document.getElementById('addDemoBananaButton');
-  bananaBtn.addEventListener('click', (e: Event) => app.popup(new Banana(1)));
+export function bindHotBarItemAnimations(hotBar: HotBar) {
+  document
+    .getElementById('addAppleButton')
+    .addEventListener('click', () => hotBar.addToHotBar(new Apple(1), 1));
 
-  let carrotBtn = document.getElementById('addDemoCarrotButton');
-  carrotBtn.addEventListener('click', (e: Event) => app.popup(new Carrot(3)));
+  document
+    .getElementById('addBreadButton')
+    .addEventListener('click', () => hotBar.addToHotBar(new Bread(1), 0));
 
-  let pearBtn = document.getElementById('addDemoPearButton');
-  pearBtn.addEventListener('click', (e: Event) => app.popup(new Pear(1)));*/
+  document
+    .getElementById('addOrangeButton')
+    .addEventListener('click', () => hotBar.addToHotBar(new Orange(1), 5));
+}
 
-  /*
-   * Hotbar Transitions
-   */
-  /*let cascadeOnBtn = document.getElementById('cascadeOnButton');
-  cascadeOnBtn.addEventListener('click', (e: Event) => app.cascade(true));
+export function bindToastDebugButtons(toast: Toast) {
+  document
+    .getElementById('addDemoBananaButton')
+    .addEventListener('click', () => toast.addToast(new Banana(1)));
 
-  let cascadeOffBtn = document.getElementById('cascadeOffButton');
-  cascadeOffBtn.addEventListener('click', (e: Event) => app.cascade(false));*/
+  document
+    .getElementById('addDemoCarrotButton')
+    .addEventListener('click', () => toast.addToast(new Carrot(3)));
 
-  /*
-   * Item Additions
-   */
-  /* let appleBtn = document.getElementById('addAppleButton');
-  appleBtn.addEventListener('click', (e: Event) => app.add(new Apple(1), 1));
+  document
+    .getElementById('addDemoPearButton')
+    .addEventListener('click', () => toast.addToast(new Pear(1)));
+}
 
-  let breadBtn = document.getElementById('addBreadButton');
-  breadBtn.addEventListener('click', (e: Event) => app.add(new Bread(1), 0));
+export function bindSelectionButtons(hotBar: HotBar) {
+  let selectionParent = document.getElementById('selection-buttons');
+  Array.from(selectionParent.getElementsByTagName('input')).forEach(
+    (element) => {
+      let buttonValue = Number(element.getAttribute('value'));
+      if (buttonValue !== undefined)
+        element.addEventListener('click', () => hotBar.select(buttonValue - 1));
+    },
+  );
+}
 
-  let orangeBtn = document.getElementById('addOrangeButton');
-  orangeBtn.addEventListener('click', (e: Event) => app.add(new Orange(1), 5));
+export function bindStyleChangeButton(app: App) {
+  let styleBtn = document.getElementById('restyle');
+  styleBtn.addEventListener('click', () => app.alternateStyle(styleBtn));
+}
 
+export function bindItemAdditionButtons(hotBar: HotBar, toast: Toast) {
   let itemParent = document.getElementById('item-buttons');
   Array.from(itemParent.getElementsByTagName('input')).forEach((element) => {
     let buttonValue = element.getAttribute('value');
     if (buttonValue !== undefined)
-      element.addEventListener('click', (e: Event) =>
-        app.add(getItemFromName(buttonValue)),
-      );
-  });*/
-
-  /*
-   * Slot Selection
-   */
-  let selectionParent = document.getElementById('selection-buttons');
-  /*Array.from(selectionParent.getElementsByTagName('input')).forEach(
-    (element) => {
-      let buttonValue = Number(element.getAttribute('value'));
-      if (buttonValue !== undefined)
-        element.addEventListener('click', (e: Event) =>
-          app.select(buttonValue - 1),
-        );
-    },
-  );*/
-
-  /*
-   * Style Alternation
-   */
-  let styleBtn = document.getElementById('restyle');
-  styleBtn.addEventListener('click', (e: Event) =>
-    app.alternateStyle(styleBtn),
-  );
+      element.addEventListener('click', () => {
+        const itemToAdd = getItemFromName(buttonValue);
+        hotBar.addToHotBar(itemToAdd);
+        toast.addToast(itemToAdd);
+      });
+  });
 }
 
 /**
@@ -102,7 +96,7 @@ export function bindButtons(app: App): void {
  * Will bind resize listeners
  */
 export function bindResizeListener(app: App) {
-  window.addEventListener('resize', (e: Event) => {
+  window.addEventListener('resize', () => {
     app.onResize();
   });
   app.onResize();
