@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
-import { calculateUpdatedDuration } from '../util/utility';
-import { lerp } from '../util/transformation';
+import { calculateRemainingDuration } from '../../util/utility';
+import { lerp } from '../../util/transformation';
 
 export abstract class AbstractAnimationService {
   complete$ = new Subject<boolean>();
@@ -8,19 +8,21 @@ export abstract class AbstractAnimationService {
   protected adjustDuration = true;
 
   protected currentIntervalId: number;
-  protected currentValue: number;
+  protected currentValue = 0;
 
   private startTime: number;
   private timeoutDelay = 3;
 
   constructor(
-    protected elements: HTMLElement[],
-    private startValue: number,
-    private targetValue: number,
-    private duration: number,
+    protected readonly elements: HTMLElement[],
+    protected readonly startValue: number,
+    protected readonly targetValue: number,
+    protected duration: number,
+    currentValue?: number,
     adjustDuration?: boolean,
   ) {
-    if (adjustDuration) this.adjustDuration = adjustDuration;
+    this.currentValue = currentValue ? currentValue : this.getCurrentValue();
+    if (adjustDuration !== undefined) this.adjustDuration = adjustDuration;
   }
 
   protected abstract updateElementValues(): void;
@@ -31,12 +33,14 @@ export abstract class AbstractAnimationService {
     this.currentValue = this.getCurrentValue();
 
     if (this.adjustDuration) {
-      this.duration = calculateUpdatedDuration(
+      const remainingDuration = calculateRemainingDuration(
         this.startValue,
         this.currentValue,
         this.targetValue,
         this.duration,
       );
+      const offset = this.duration - remainingDuration;
+      this.startTime -= offset;
     }
 
     this.currentIntervalId = setTimeout(
@@ -51,6 +55,11 @@ export abstract class AbstractAnimationService {
     this.currentValue = this.targetValue;
     this.updateElementValues();
     this.end();
+  }
+
+  stop(): void {
+    clearInterval(this.currentIntervalId);
+    this.complete$.next(true);
   }
 
   protected update(): void {

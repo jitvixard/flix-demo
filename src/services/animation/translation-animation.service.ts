@@ -1,5 +1,5 @@
 import { AbstractAnimationService } from './abstract-animation.service';
-import { getElementTranslation } from '../util/utility';
+import { getElementTranslation } from '../../util/utility';
 
 export class TranslationAnimationService extends AbstractAnimationService {
   constructor(
@@ -8,13 +8,17 @@ export class TranslationAnimationService extends AbstractAnimationService {
     startValue: number,
     targetValue: number,
     duration: number,
+    currentValue?: number,
     adjustDuration?: boolean,
   ) {
-    super(elements, startValue, targetValue, duration, adjustDuration);
-    this.elements = elements;
-    this.startValue = startValue;
-    this.targetValue = targetValue;
-    this.duration = duration;
+    super(
+      elements,
+      startValue,
+      targetValue,
+      duration,
+      currentValue,
+      adjustDuration,
+    );
   }
 
   protected updateElementValues(): void {

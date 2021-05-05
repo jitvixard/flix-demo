@@ -1,5 +1,5 @@
-import { OpacityAnimationService } from '../services/opacity-animation.service';
-import { TranslationAnimationService } from '../services/translation-animation.service';
+import { OpacityAnimationService } from '../services/animation/opacity-animation.service';
+import { TranslationAnimationService } from '../services/animation/translation-animation.service';
 import { Animation } from './animation';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -20,7 +20,7 @@ export class SubtleFadeAnimation implements Animation {
 
   private duration = 1000;
 
-  constructor(private hotbar: HTMLElement, fadingOn: boolean) {
+  constructor(private hotBarElement: HTMLElement, fadingOn: boolean) {
     const distance = 125;
 
     this.startPosition = fadingOn ? distance : 0;
@@ -28,23 +28,25 @@ export class SubtleFadeAnimation implements Animation {
 
     this.startOpacity = fadingOn ? 0 : 1;
     this.endOpacity = fadingOn ? 1 : 0;
+
+    this.completed$ = new Subject<boolean>();
   }
 
-  start(): Subject<boolean> {
+  start(override?: boolean): Subject<boolean> {
     this.play();
     return this.completed$;
   }
 
   private play() {
     this.opacityAnimation = new OpacityAnimationService(
-      [this.hotbar],
+      [this.hotBarElement],
       this.startOpacity,
       this.endOpacity,
       this.duration,
     );
     this.translationAnimation = new TranslationAnimationService(
       'X',
-      [this.hotbar],
+      [this.hotBarElement],
       this.startPosition,
       this.endPosition,
       this.duration,
@@ -66,5 +68,10 @@ export class SubtleFadeAnimation implements Animation {
         if (this.opacityComplete && this.translationComplete)
           this.completed$.next(true);
       });
+  }
+
+  stop(): void {
+    this.translationAnimation.stop();
+    this.opacityAnimation.stop();
   }
 }

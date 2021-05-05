@@ -15,18 +15,18 @@ Before reading/inspecting please note. The draft you see is what I consider incr
 - Install `rxjs`
 - Navigate to the root directory and run `npm start`
 
-### Functionality
-- The application can be controlled from the debug panel found in the top right hand side of the page. 
-- All functional deliverables can be assertained through this panel. 
-  - Debug buttons to play hotbar animations can be found under ***Hotbar Animations*** 
-  - Debug buttons to add items to the hotbar at specified positions can be found under ***Hotbar Interactions*** 
-  - Debug buttons to trigger pop-ups, that do not add items to the hotbar can be found under ***Pop-up Toast***
-  - In regards to selecting given slots, I took the liberty of expanding on the brief ever so slightly. Under ***Hotbar Selection*** is a collection debug buttons that will allow for the simulation of any given hotbar element.
-  - In addition to that I've provided buttons that will add any item to the hotbar and the inventory resulting in the item appearing on the hotbar as well as a pop-up toast notification. These can be found under ***Item Addition***
-  - I took the liberty of adding an extra feature. I found the pop-up toast to be slightly incovenient. This was in part due to my leaving the UI oversized (inentionally) as a way to better use the space. By clicking the button marked ***Adjust Style*** the css relating to pop-ups will change. Pressing it again will revert this. This could be a potential alternative for the UI.
-- Reducing the width of the application will result in the hotbar elements stacking, as requested.
-- All visual elements have been laid out in accordance with the spec. With the addition of an alternative toast location being provided for demonstration purposes.
+## About A Better Approach
+Using the time given I went back over this and did some significant refactors that change the flow of demo. Animations have been moved into a variety of services that control aspects of the styling necessary for animation (e.g. scaling, opacity).
 
+These services allow for an animation to be easily interrupted and stopped by external processes, as well as allowing larger animations (seen in `src/animations`) to be chained together through the use of observables.
+
+The main benefit of the observables was that when it came to larger animations, instead of trying to chain together a series of timeouts, I could instead break the animation down into smaller chunks and fire those chunks as each observable emitted on completion.
+
+Another benefit however, was the easy implementation of interruption systems, to allow button clicks to stop animations, start new ones, whilst having them adjust to the current position rather than behave as if they were in an on/off position. 
+
+My thoughts were that should in a practical sense the UI project need frequent animations (as done here), then a service could be created to handle the individual parts of the animation (like scale, see `src/services/animation/scale-animation.service.ts`) and then those services can be scripted together in a predefined larger animation (such as `animations/item-selection-animation.ts`).
+
+The way the `rxjs` `observables` are implemented here are just one of many. Depending on the needs of the animation, and limitations of the Coherent HTML Engine, further steps could be taken to optimise this further. For example combining an observable pattern with `rxjs` state stores would persist data in client side caches. If coherent entertained this, then data between scenes may not need reloading and could possibly instead by cached for a quicker retrieval.
 
 ## On Development
 ### Technology Used
@@ -78,27 +78,6 @@ Contains stylesheets used.
 
 #### src -> util
 I created several utility functions to handle things such as translating elements, opacity fades, parsing style values into numbers, etc. Some of these were exported, others that found frequent use accross the project were bound to the `window` property of the app. This allowed for global access without needing to constantly re-import elements.
-
-
-## A Better Approach
-Like I mentioned this project was treated like an MVP and as such the code is a bit rougher round the edges than I usually strive to. I instead aimed to staddle a line between functionality and demonstration of how I think when approaching a task. I have however outlined below improvements I would like to make in future, that I wasn't able to include due to my schedule. 
-
-
-### Using Observables
-The way in which everything is currently handled is fine. But the need to bind functionality due to a reliance on the `this` keyword in some places is rather limiting. To get around this I propose that the introduction of observables (a push driven notification, provided by rxjs) would be benefical.
-
-Observables would be useful if coupled with a series of animations services (see `src/services/...`). Each UI feature could call on an animation within the service and then subscribe to a `BehaviourSubject` provided back. When that subsription eventually returns a true to the callback function, the UI component can process it's next step. For example, when cascading the columns of the hotbar it could be beneficial once a column has completed its transition on/off the screen then the notification could be used to trigger the next column to cascade:  
-
-`animationService.cascadeColumn(elements).subscribe((completed) => {if (completed) this.cascadeNextColumn();})` 
-
-This would remove large sections of code from all the current animations handlers. It would also benefit the next point greatly.
-
-
-### Interupts
-Currently the majority of the animations I implemented have some form of queuing functionality. For example if an item is added to the hotbar, the item swells and then shrinks. If another item is then added, an animation is queued up to then play once the current animation has finished. This is fine and works to the specification provided on certain elements like the pop-up toast. But by providing interupts the system could potentialy seem a lot more repsonsive.
-
-Another bonus would be that it fixes certain conflicts between with Javascript's setTimeouts. I found some scheduling issues, whereby even the a timeout had been cleared it stil managed to play. By adding interrupt methods a routine coudl run to first ensure the animation currently playing has come to a stand still. Before adjusting animation speeds and firing the counter-animation requested. 
-
 
 
 
