@@ -1,0 +1,161 @@
+body {
+  overflow: hidden;
+
+  font-family: monospace;
+}
+
+#controlPanel {
+  margin: auto;
+  width: 40%;
+
+  position: absolute;
+
+  top: 40px;
+  right: 80px;
+
+  border: 3px solid green;
+
+  padding: 1.5%;
+  padding-bottom: 3.5%;
+
+  z-index: 10;
+}
+
+#toast-buttons {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+#hotbar-animation-buttons {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#hotbar-interaction-buttons {
+  grid-template-columns: repeat(1, 1fr);
+}
+
+.button-pane-title {
+  font-size: 16px;
+  display: block;
+
+  margin-bottom: 1%;
+  margin-top: 2%;
+
+  text-align: center;
+}
+
+.button-pane {
+  text-align: center;
+  display: block;
+}
+
+.button-pane-buttons {
+  display: grid;
+  text-align: center;
+}
+
+#restyle {
+  margin-top: 20px;
+}
+
+#hotbar-container {
+  /*positioning*/
+  bottom: 40px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#hotbar {
+  /*grid related display*/
+  display: grid;
+}
+
+.hotbar-item {
+  height: 132px;
+  width: 132px;
+
+  background-image: url('../Assets/hotbar/hotbar-item.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.hotbar-item .selected {
+  max-height: 132px;
+  max-width: 132px;
+
+  z-index: -1;
+  position: absolute;
+  bottom: 0;
+
+  background-image: url('../Assets/hotbar/hotbar-item.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.hotbar-item .selected {
+  background-image: url('../Assets/hotbar/focused/hotbar-item.png');
+  height: 100%;
+  width: 100%;
+}
+
+.hotbar-content {
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+}
+
+.hotbar-content img {
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
+
+  grid-column: 2 / 8;
+  grid-row: 2 / 7;
+}
+
+.hotbar-content p {
+  width: 100%;
+
+  margin: auto;
+  margin-bottom: 5px;
+
+  grid-column-start: 7;
+  grid-row-end: 9;
+}
+
+#toast-container {
+  left: 25px;
+
+  height: 720px;
+
+  bottom: 0;
+
+  position: absolute;
+
+  display: flex;
+  flex-direction: column-reverse;
+
+  z-index: 1;
+}
+
+.popup-toast {
+  height: 140px;
+  width: 323px;
+
+  display: inline;
+
+  margin-bottom: 40px;
+  padding: 0;
+
+  z-index: 5;
+
+  background-image: url('../Assets/popup/toast.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
