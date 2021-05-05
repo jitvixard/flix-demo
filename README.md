@@ -48,28 +48,31 @@ Entry point for the application.
 Page html.
 
 
+#### src -> animations
+Large scripted animations
+
 #### src -> assets
 In the assets folder all images used by the application can be found. The references for the used assets can be found in `references.txt`. If no refernce is specified then it can be assumed to be provided in the brief or edited by myself.
 
 
-#### src -> hotbar
-Contains services and classes relating to the hotbar UI element. Functionality has been broken down into the following.
-- `hotbar.ts` ~ Handles requests from the UI. Makes calls to the hotbar services with some parameter validation.
-- `hotbar-item.service.ts` ~ Handles the placing of items onto the hotbar.
-- `hotbar-selection.service.ts` ~ Handles the selection of hotbar elements.
-- `hotbar-transition.service.ts` ~ Handles transitions that apply to the entire hotbar. Implementations of this class is used to animate the cascade and sublt fade effects.
+#### src -> controllers
+UI Controllers.
+
+
+#### src -> factories
+Component factories (an angular practice), used to create the UI component functionality.
 
 
 #### src -> model
 I won't bore you. This one's just the under lying model. Currently it features a `AbstractItem` and several concrete implementations.
 
 
-#### src -> pop-up
-In here `toast.ts` handles all functionality surrounding pop-up toast elements. 
-
-
 #### src -> services
-These were part of my implementation of a observable based method of handling this task. I decided to leave them in for you to see how I'd identified certain pieces of code to be extracted from all the other ui-feature classes and services. See below in ***A Better Approach*** for more details. 
+Various utility services for the project. Features a storage service as well as several animation services.
+
+
+#### src -> ui
+UI components and their interaction.
 
 
 #### src -> style
