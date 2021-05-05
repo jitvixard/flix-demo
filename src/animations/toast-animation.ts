@@ -35,6 +35,7 @@ export class ToastAnimation implements Animation {
     this.opacityAnimation
       .start()
       .pipe(filter((v) => v))
+
       .subscribe((complete) => {
         if (complete) {
           this.fadeInComplete = complete;
@@ -66,7 +67,7 @@ export class ToastAnimation implements Animation {
       });
   }
 
-  stop(): void {
+  stop(onlyPause?: boolean): void {
     if (this.opacityAnimation) this.opacityAnimation.stop();
     if (this.holdIntervalId && !this.holdComplete)
       clearInterval(this.holdIntervalId);

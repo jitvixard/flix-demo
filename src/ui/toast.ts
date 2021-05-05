@@ -3,6 +3,7 @@ import { createToast } from '../util/factory';
 import { ToastAnimation } from '../animations/toast-animation';
 import { filter } from 'rxjs/operators';
 import { removeElement } from '../util/utility';
+import { Subscription } from 'rxjs';
 
 export class Toast {
   private activeToast = new Array<Item>();
@@ -10,6 +11,7 @@ export class Toast {
 
   private itemSet = new Set<Item>();
   private toastAnimations = new Map<Item, ToastAnimation>();
+  private toastSubscriptions = new Map<Item, Subscription>();
 
   readonly maxToast = 2;
 
@@ -70,18 +72,23 @@ export class Toast {
     if (isActive) {
       //end animation
       let currentAnimation = this.toastAnimations.get(existingToast);
+      this.toastSubscriptions.get(existingToast).unsubscribe();
+
       currentAnimation.stop();
       this.toastAnimations.delete(existingToast);
       //start animation
       currentAnimation = new ToastAnimation(existingToast.popupRef);
-      currentAnimation
-        .start()
-        .pipe(filter((v) => v))
-        .subscribe((complete) => {
-          if (complete) {
-            this.removeToast(existingToast);
-          }
-        });
+      this.toastSubscriptions.set(
+        existingToast,
+        currentAnimation
+          .start()
+          .pipe(filter((v) => v))
+          .subscribe((complete) => {
+            if (complete) {
+              this.removeToast(existingToast);
+            }
+          }),
+      );
       //saving animation
       this.toastAnimations.set(existingToast, currentAnimation);
     }
@@ -100,13 +107,16 @@ export class Toast {
 
     this.toastContainer.appendChild(poppedToast.popupRef);
 
-    toastAnim
-      .start()
-      .pipe(filter((v) => v))
-      .subscribe((complete) => {
-        if (complete) {
-          this.removeToast(poppedToast);
-        }
-      });
+    this.toastSubscriptions.set(
+      poppedToast,
+      toastAnim
+        .start()
+        .pipe(filter((v) => v))
+        .subscribe((complete) => {
+          if (complete) {
+            this.removeToast(poppedToast);
+          }
+        }),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { AbstractItem } from '../../model/items/abstract-item';
 import { ItemAdditionAnimation } from '../../animations/item-addition-animation';
 import { createHotBarItem, updateHotBarText } from '../../util/factory';
+import { removeElement } from '../../util/utility';
 
 export class HotBarStoreService {
   private itemsOnHotBar: AbstractItem[];
@@ -93,7 +94,7 @@ export class HotBarStoreService {
   private remove(index: number) {
     const item = this.itemsOnHotBar[index];
     if (item) {
-      this.itemSlots[index] = undefined;
+      removeElement(item.contentRef);
     }
     this.itemsOnHotBar[index] = undefined;
   }
